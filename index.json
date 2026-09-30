@@ -167,13 +167,13 @@
         "name": "LectorTMOo",
         "package_name": "eu.kanade.tachiyomi.extension.es.lectortmoo",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.lectortmoo-v1.6.4.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.lectortmoo-v1.6.5.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.lectortmoo.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.lectortmoo-v1.6.4.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.lectortmoo-v1.6.5.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106004",
-        "version_name": "1.6.4",
+        "version_code": "106005",
+        "version_name": "1.6.5",
         "content_warning": 3,
         "sources": [
           {
