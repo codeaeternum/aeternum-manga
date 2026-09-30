@@ -29,9 +29,8 @@ con firma propia.
 | HentaiMode | es | NSFW |
 | NovelCool | en, es, de, ru, it, pt-BR, fr | OK |
 | Webtoons.com | en, es, id, th, fr, zh-Hant, de | OK |
-| TMOHentai (unoriginal) | es | ⚠️ Sitio caído (TMO desmantelado abr-2026) |
-| ZonaTMO.org (unoriginal) | es | ⚠️ Sitio caído |
-| Zonatmo.to (unoriginal) | es | ⚠️ Sitio caído |
+| LectorTMOo | es | Propia (lectortmo.online) |
+| TuMangaHentai | es | Propia (tumangahentai.com), NSFW |
 
 ## Recompilar
 

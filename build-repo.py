@@ -21,9 +21,18 @@ ICON_REL = "res/mipmap-xhdpi/ic_launcher.png"
 # contentWarning ordinal+1: UNSPECIFIED=0, SAFE=1, MIXED=2, NSFW=3
 NSFW_WARNINGS = {2, 3}
 
+# Extensiones muertas: TMO desmantelado por la Policía Nacional (abr-2026).
+SKIP_MODULES = {
+    "es.tmohentaiunoriginal",
+    "es.zonatmoto",
+    "es.zonatmoorgunoriginal",
+}
+
 entries = []
 for info_file in sorted(SRC_ROOT.glob(f"*/*/{INFO_GLOB}")):
     info = json.loads(info_file.read_text(encoding="utf-8"))
+    if info["module"] in SKIP_MODULES:
+        continue
     ext_dir = info_file.parents[1]
 
     apks = list(ext_dir.glob(APK_GLOB))

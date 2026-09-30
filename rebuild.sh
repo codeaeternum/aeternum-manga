@@ -14,12 +14,10 @@ export KEY_PASSWORD=tachimanga-repo
 
 MODULES=(
   es:manhwaweb
-  es:tmohentaiunoriginal
-  es:zonatmoto
-  es:zonatmoorgunoriginal
   es:hentaimode
   es:ikigaimangas
   es:leercapitulo
+  es:lectortmoo
   all:novelcool
   all:webtoons
 )
