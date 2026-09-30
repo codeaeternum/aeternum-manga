@@ -1,0 +1,237 @@
+{
+  "name": "Aeternum",
+  "badge_label": "AET",
+  "signing_key": "f06b526e06bb463e48a674d3e51a03e451310038b78b774bb00f499fad97c7f2",
+  "contact": {
+    "website": "https://github.com/codeaeternum/aeternum-manga"
+  },
+  "extension_list": {
+    "extensions": [
+      {
+        "name": "NovelCool",
+        "package_name": "eu.kanade.tachiyomi.extension.all.novelcool",
+        "resources": {
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.novelcool-v1.6.1.apk",
+          "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.all.novelcool.png",
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.novelcool-v1.6.1.jar"
+        },
+        "extension_lib": "1.6",
+        "version_code": "106001",
+        "version_name": "1.6.1",
+        "content_warning": 2,
+        "sources": [
+          {
+            "id": "7570101320206504111",
+            "name": "NovelCool",
+            "language": "en",
+            "home_url": "https://www.novelcool.com"
+          },
+          {
+            "id": "438359803442833644",
+            "name": "NovelCool",
+            "language": "es",
+            "home_url": "https://es.novelcool.com"
+          },
+          {
+            "id": "4806085996472938237",
+            "name": "NovelCool",
+            "language": "de",
+            "home_url": "https://de.novelcool.com"
+          },
+          {
+            "id": "2000643041937250352",
+            "name": "NovelCool",
+            "language": "ru",
+            "home_url": "https://ru.novelcool.com"
+          },
+          {
+            "id": "1430309870605719983",
+            "name": "NovelCool",
+            "language": "it",
+            "home_url": "https://it.novelcool.com"
+          },
+          {
+            "id": "2431307934077353736",
+            "name": "NovelCool",
+            "language": "pt-BR",
+            "home_url": "https://br.novelcool.com"
+          },
+          {
+            "id": "1619259951234748770",
+            "name": "NovelCool",
+            "language": "fr",
+            "home_url": "https://fr.novelcool.com"
+          }
+        ]
+      },
+      {
+        "name": "Webtoons.com",
+        "package_name": "eu.kanade.tachiyomi.extension.all.webtoons",
+        "resources": {
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.webtoons-v1.6.2.apk",
+          "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.all.webtoons.png",
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.webtoons-v1.6.2.jar"
+        },
+        "extension_lib": "1.6",
+        "version_code": "106002",
+        "version_name": "1.6.2",
+        "content_warning": 1,
+        "sources": [
+          {
+            "id": "2522335540328470744",
+            "name": "Webtoons.com",
+            "language": "en",
+            "home_url": "https://www.webtoons.com"
+          },
+          {
+            "id": "8749627068478740298",
+            "name": "Webtoons.com",
+            "language": "id",
+            "home_url": "https://www.webtoons.com"
+          },
+          {
+            "id": "3330861233813615504",
+            "name": "Webtoons.com",
+            "language": "th",
+            "home_url": "https://www.webtoons.com"
+          },
+          {
+            "id": "8664735734660636295",
+            "name": "Webtoons.com",
+            "language": "es",
+            "home_url": "https://www.webtoons.com"
+          },
+          {
+            "id": "8251758253314457060",
+            "name": "Webtoons.com",
+            "language": "fr",
+            "home_url": "https://www.webtoons.com"
+          },
+          {
+            "id": "2959982438613576472",
+            "name": "Webtoons.com",
+            "language": "zh-Hant",
+            "home_url": "https://www.webtoons.com"
+          },
+          {
+            "id": "1486822823904297379",
+            "name": "Webtoons.com",
+            "language": "de",
+            "home_url": "https://www.webtoons.com"
+          }
+        ]
+      },
+      {
+        "name": "HentaiMode",
+        "package_name": "eu.kanade.tachiyomi.extension.es.hentaimode",
+        "resources": {
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.hentaimode-v1.6.1.apk",
+          "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.hentaimode.png",
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.hentaimode-v1.6.1.jar"
+        },
+        "extension_lib": "1.6",
+        "version_code": "106001",
+        "version_name": "1.6.1",
+        "content_warning": 3,
+        "sources": [
+          {
+            "id": "5208759847357095642",
+            "name": "HentaiMode",
+            "language": "es",
+            "home_url": "https://hentaimode.com"
+          }
+        ]
+      },
+      {
+        "name": "Ikigai Mangas",
+        "package_name": "eu.kanade.tachiyomi.extension.es.ikigaimangas",
+        "resources": {
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.ikigaimangas-v1.6.41.apk",
+          "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.ikigaimangas.png",
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.ikigaimangas-v1.6.41.jar"
+        },
+        "extension_lib": "1.6",
+        "version_code": "106041",
+        "version_name": "1.6.41",
+        "content_warning": 2,
+        "sources": [
+          {
+            "id": "7749406396573482811",
+            "name": "Ikigai Mangas",
+            "language": "es",
+            "home_url": "https://visorikigai.gettocaboca.com"
+          }
+        ]
+      },
+      {
+        "name": "LectorTMOo",
+        "package_name": "eu.kanade.tachiyomi.extension.es.lectortmoo",
+        "resources": {
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.lectortmoo-v1.6.3.apk",
+          "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.lectortmoo.png",
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.lectortmoo-v1.6.3.jar"
+        },
+        "extension_lib": "1.6",
+        "version_code": "106003",
+        "version_name": "1.6.3",
+        "content_warning": 3,
+        "sources": [
+          {
+            "id": "3077395446080642519",
+            "name": "LectorTMOo",
+            "language": "es",
+            "home_url": "https://lectortmo.online"
+          },
+          {
+            "id": "5235109682246513253",
+            "name": "TuMangaHentai",
+            "language": "es",
+            "home_url": "https://tumangahentai.com"
+          }
+        ]
+      },
+      {
+        "name": "LeerCapitulo",
+        "package_name": "eu.kanade.tachiyomi.extension.es.leercapitulo",
+        "resources": {
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.leercapitulo-v1.6.1.apk",
+          "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.leercapitulo.png",
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.leercapitulo-v1.6.1.jar"
+        },
+        "extension_lib": "1.6",
+        "version_code": "106001",
+        "version_name": "1.6.1",
+        "content_warning": 1,
+        "sources": [
+          {
+            "id": "5621901596522308538",
+            "name": "LeerCapitulo",
+            "language": "es",
+            "home_url": "https://www.leercapitulo.co"
+          }
+        ]
+      },
+      {
+        "name": "ManhwaWeb",
+        "package_name": "eu.kanade.tachiyomi.extension.es.manhwaweb",
+        "resources": {
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.manhwaweb-v1.6.14.apk",
+          "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.manhwaweb.png",
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.manhwaweb-v1.6.14.jar"
+        },
+        "extension_lib": "1.6",
+        "version_code": "106014",
+        "version_name": "1.6.14",
+        "content_warning": 2,
+        "sources": [
+          {
+            "id": "5943212552955476721",
+            "name": "ManhwaWeb",
+            "language": "es",
+            "home_url": "https://manhwaweb.com"
+          }
+        ]
+      }
+    ]
+  }
+}
