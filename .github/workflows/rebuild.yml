@@ -1,0 +1,73 @@
+name: Rebuild extensions repo
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Semanal: lunes 06:00 UTC
+    - cron: "0 6 * * 1"
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repo (aeternum-manga)
+        uses: actions/checkout@v4
+        with:
+          path: aeternum-manga
+
+      - name: Clone upstream extensions-source
+        run: git clone --depth 1 https://github.com/keiyoushi/extensions-source extensions-source
+
+      - name: Apply aeternum patches
+        run: |
+          cd extensions-source
+          git apply ../aeternum-manga/patches/aeternum.patch
+          cp -R ../aeternum-manga/patches/lectortmoo src/es/lectortmoo
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Restore signing key
+        run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > extensions-source/signingkey.jks
+
+      - name: Android SDK platform 37
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-37"
+
+      - name: Build extensions (apk + jar)
+        working-directory: extensions-source
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          ./gradlew \
+            :src:all:novelcool:assembleRelease \
+            :src:all:webtoons:assembleRelease \
+            :src:es:hentaimode:assembleRelease \
+            :src:es:ikigaimangas:assembleRelease \
+            :src:es:lectortmoo:assembleRelease \
+            :src:es:leercapitulo:assembleRelease \
+            :src:es:manhwaweb:assembleRelease
+
+      - name: Regenerate repo index
+        working-directory: aeternum-manga
+        run: python3 build-repo.py
+
+      - name: Commit and push if changed
+        working-directory: aeternum-manga
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Sin cambios"
+          else
+            git commit -m "Rebuild: upstream sync ($(date -u +%Y-%m-%d))"
+            git push
+          fi
