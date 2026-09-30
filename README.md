@@ -1,16 +1,17 @@
-# Repo de extensiones Tachimanga
+# Aeternum Manga
 
-Repo personal de extensiones (formato legado `index.min.json`) compilada desde
-[`keiyoushi/extensions-source`](../extensions-source) con firma propia.
+Repo personal de extensiones para Tachimanga/Mihon (formato legado
+`index.min.json`), compilada desde
+[`keiyoushi/extensions-source`](https://github.com/keiyoushi/extensions-source)
+con firma propia.
 
 ## Añadir en Tachimanga
 
-1. Sube esta carpeta a un repositorio **público** de GitHub (el contenido en la raíz o en una rama).
-2. En Tachimanga: **More → Extensions → Extension Repositories → Add Repository**
-3. Pega la URL del `index.min.json` raw, p. ej.:
+1. En Tachimanga: **More → Extensions → Extension Repositories → Add Repository**
+2. Pega la URL del `index.min.json`:
 
    ```
-   https://raw.githubusercontent.com/<tu-usuario>/<tu-repo>/main/index.min.json
+   https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/index.min.json
    ```
 
 4. **Browse → Extensions** → instala las que necesites.
