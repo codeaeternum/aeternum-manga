@@ -134,11 +134,13 @@ for info_file in info_files.values():
 
     build_dir = find_build_dir(info["module"])
 
-    apks = list(build_dir.glob("outputs/apk/release/*.apk"))
-    jars = list(build_dir.glob("outputs/jar/release/*.jar"))
+    # Emparejar por versionName exacto: el dir de salida acumula builds viejos
+    ver = info["versionName"]
+    apks = list(build_dir.glob(f"outputs/apk/release/*-v{ver}.apk"))
+    jars = list(build_dir.glob(f"outputs/jar/release/*-v{ver}.jar"))
     if not apks or not jars:
         print(
-            f"!! {info['packageName']}: falta apk o jar en {build_dir}, omitido",
+            f"!! {info['packageName']}: falta apk o jar v{ver} en {build_dir}, omitido",
             file=sys.stderr,
         )
         continue
