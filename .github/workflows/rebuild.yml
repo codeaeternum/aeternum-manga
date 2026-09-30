@@ -31,13 +31,16 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Restore signing key
-        run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > extensions-source/signingkey.jks
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Android SDK platform 37
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platforms;android-37"
+
+      - name: Restore signing key
+        run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > extensions-source/signingkey.jks
 
       - name: Build extensions (apk + jar)
         working-directory: extensions-source
