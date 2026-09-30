@@ -44,6 +44,8 @@ for info_file in sorted(SRC_ROOT.glob(f"*/*/{INFO_GLOB}")):
     langs = {s["lang"] for s in info["sources"]}
     ext_lang = langs.pop() if len(langs) == 1 else "all"
 
+    # Mismo esquema que Kohi-den/leijie115 (verificado funcional en Tachimanga):
+    # sin versionId ni hasReadme/hasChangelog.
     entry = {
         "name": info["name"],
         "pkg": info["packageName"],
@@ -58,14 +60,15 @@ for info_file in sorted(SRC_ROOT.glob(f"*/*/{INFO_GLOB}")):
                 "lang": s["lang"],
                 "id": str(s["id"]),
                 "baseUrl": s["baseUrl"],
-                "versionId": 1,
             }
             for s in info["sources"]
         ],
     }
     entries.append(entry)
 
-    shutil.copy2(apk, HERE / apk.name)
+    apk_dir = HERE / "apk"
+    apk_dir.mkdir(exist_ok=True)
+    shutil.copy2(apk, apk_dir / apk.name)
 
     icon = ext_dir / ICON_REL
     if icon.exists():
@@ -74,6 +77,8 @@ for info_file in sorted(SRC_ROOT.glob(f"*/*/{INFO_GLOB}")):
         shutil.copy2(icon, icon_dir / f"{info['packageName']}.png")
 
     print(f"ok {info['name']} v{info['versionName']} ({apk.name})")
+
+entries.sort(key=lambda e: e["pkg"])
 
 index = HERE / "index.min.json"
 index.write_text(json.dumps(entries, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
