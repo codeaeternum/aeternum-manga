@@ -1,0 +1,39 @@
+name: Source healthcheck
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Diario 07:00 UTC
+    - cron: "0 7 * * *"
+
+permissions:
+  issues: write
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run healthcheck
+        id: check
+        run: ./healthcheck.sh | tee result.txt
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_TITLE="Fuentes caídas — $(date -u +%Y-%m-%d)"
+          EXISTING=$(gh issue list --state open --search "in:title \"Fuentes caídas\"" --json number --jq '.[0].number' || true)
+          BODY="\`\`\`
+          $(cat result.txt)
+          \`\`\`
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh issue create --title "$ISSUE_TITLE" --body "$BODY"
+          fi
