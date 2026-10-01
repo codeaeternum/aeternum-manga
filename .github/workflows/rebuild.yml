@@ -19,14 +19,18 @@ jobs:
         with:
           path: aeternum-manga
 
-      - name: Clone upstream extensions-source
-        run: git clone --depth 1 https://github.com/keiyoushi/extensions-source extensions-source
+      - name: Clone upstream extensions-source (pinned)
+        run: |
+          git clone --depth 1 https://github.com/keiyoushi/extensions-source extensions-source
+          cd extensions-source
+          git fetch --depth 1 origin 8c3323cca3615b00edb7a5c79603ee434b2864f8
+          git checkout FETCH_HEAD
 
       - name: Apply aeternum patches
         run: |
           cd extensions-source
           git apply ../aeternum-manga/patches/aeternum.patch
-          cp -R ../aeternum-manga/patches/lectortmoo src/es/lectortmoo
+          cp -R ../aeternum-manga/patches/modules/* src/
 
       - name: Set up Java
         uses: actions/setup-java@v4
