@@ -30,6 +30,9 @@ jobs:
         run: |
           cd extensions-source
           git apply ../aeternum-manga/patches/aeternum.patch
+          for d in ../aeternum-manga/patches/modules/*/*/; do
+            rm -rf "src/${d#../aeternum-manga/patches/modules/}"
+          done
           cp -R ../aeternum-manga/patches/modules/* src/
 
       - name: Set up Java
