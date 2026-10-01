@@ -26,10 +26,9 @@ jobs:
           git fetch --depth 1 origin 8c3323cca3615b00edb7a5c79603ee434b2864f8
           git checkout FETCH_HEAD
 
-      - name: Apply aeternum patches
+      - name: Install aeternum modules
         run: |
           cd extensions-source
-          git apply ../aeternum-manga/patches/aeternum.patch
           for d in ../aeternum-manga/patches/modules/*/*/; do
             rm -rf "src/${d#../aeternum-manga/patches/modules/}"
           done
