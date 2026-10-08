@@ -1,8 +1,10 @@
 # Aeternum Manga
 
-Repo personal de extensiones para Tachimanga, compilada desde
-[`keiyoushi/extensions-source`](https://github.com/keiyoushi/extensions-source)
-con firma propia.
+Repo personal de extensiones para Tachimanga con **scrapers propios** —
+las 7 extensiones están escritas y mantenidas aquí (en `patches/modules/`),
+iOS-nativas desde cero. El framework de build (`KeiSource`, extension-lib,
+plugin Gradle) viene de [`keiyoushi/extensions-source`](https://github.com/keiyoushi/extensions-source)
+**congelado en un commit fijo** — solo como toolchain, no como fuente de scrapers.
 
 Sirve **dos formatos** de índice:
 
@@ -27,24 +29,32 @@ Sirve **dos formatos** de índice:
 
 ## Extensiones incluidas
 
-| Extensión | Idioma | Estado |
-|---|---|---|
-| ManhwaWeb | es | OK |
-| Ikigai Mangas | es | Sin búsqueda por texto (el sitio la hace vía JS/Qwik) |
-| LeerCapitulo | es | OK |
-| HentaiMode | es | NSFW; búsqueda rota en el sitio, no en la ext |
-| NovelCool | en, es, de, ru, it, pt-BR, fr | OK |
-| Webtoons.com | en, es, id, th, fr, zh-Hant, de | Sin author notes ni selector de calidad |
-| LectorTMOo | es | Propia (lectortmo.online) |
-| TuMangaHentai | es | Propia (tumangahentai.com), NSFW |
+| Extensión | Idioma | Fuentes | Notas |
+|---|---|---|---|
+| ManhwaWeb | es | 1 | API JSON propia |
+| Ikigai Mangas | es | 1 | Dominio autodescubierto por request (rota); sin búsqueda por texto — el sitio la hace vía JS/Qwik, imposible sin WebView |
+| LeerCapitulo | es | 1 | Con filtros de género/tipo/estado + URL search |
+| HentaiMode | es | 1 | NSFW; búsqueda por nombre vía etiquetas/series/artistas (la del sitio está rota) |
+| NovelCool | en, es, de, ru, it, pt-BR, fr | 7 | API app, URL search, capítulos de texto omitidos |
+| Webtoons.com | en, es, id, th, fr, zh-Hant, de | 7 | Búsqueda Originales/Canvas paginada; sin author notes ni selector de calidad |
+| LectorTMOo | es | 2 | lectortmo.online + tumangahentai.com (NSFW), géneros dinámicos |
 
-## Recompilar y regenerar
+## Estructura
+
+```
+patches/modules/<lang>/<ext>/   ← código fuente propio de cada extensión
+build-repo.py                   ← genera index.pb + index.min.json + apk/ + jar/
+rebuild.sh                      ← sync módulos → compila → regenera repo
+healthcheck.sh                  ← verifica endpoints de las 8 fuentes
+.github/workflows/
+  rebuild.yml                   ← semanal: compila todo desde framework pinned
+  healthcheck.yml               ← diario: ping a fuentes, abre issue si caen
+```
+
+## Recompilar local
 
 ```bash
-cd ../extensions-source
-./gradlew :src:es:lectortmoo:assembleRelease   # genera apk + jar firmados
-cd ../aeternum-manga
-python3 build-repo.py                          # copia artefactos + índices
+./rebuild.sh   # hace todo: sync módulos → gradle → índices
 ```
 
 Las extensiones redirigen `buildDir` a `~/.aeternum-ext-build/` porque ProGuard
@@ -58,5 +68,7 @@ en la raíz de `extensions-source` (env: `KEY_STORE_PASSWORD`, `ALIAS`,
 
 - `repo.json`/`index.pb` llevan la huella SHA-256 del certificado de firma;
   Tachimanga la usa para verificar los `.jar`/`.apk`.
-- Extensiones muertas (TMO, cerrado por la Policía Nacional abr-2026) están
-  excluidas vía `SKIP_MODULES` en `build-repo.py`.
+- Todas las extensiones son iOS/OpenJ9-safe por diseño: cero `android.*`,
+  sin `SharedPreferences`/`WebView`/`CookieManager`/prefs screens.
+- Al cambiar un scraper, sube su `versionCode` en `build.gradle.kts` para que
+  la app lo vea como update.
