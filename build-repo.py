@@ -191,6 +191,28 @@ for info_file in info_files.values():
 entries.sort(key=lambda e: e["pkg"])
 built.sort(key=lambda b: b[0]["packageName"])
 
+# ---------- changelog ----------
+prev_file = HERE / "index.min.json"
+prev_versions = (
+    {e["pkg"]: e["version"] for e in json.loads(prev_file.read_text(encoding="utf-8"))}
+    if prev_file.exists()
+    else {}
+)
+changes = [
+    f"- {e['name']} {prev_versions.get(e['pkg'], '(nuevo)')} -> {e['version']}"
+    for e in entries
+    if prev_versions.get(e["pkg"]) != e["version"]
+]
+if changes:
+    import datetime
+
+    changelog = HERE / "CHANGELOG.md"
+    header = f"## {datetime.date.today().isoformat()}\n\n" + "\n".join(changes) + "\n\n"
+    changelog.write_text(
+        "# Changelog\n\n" + header + (changelog.read_text(encoding="utf-8")[len("# Changelog\n\n"):] if changelog.exists() else ""),
+        encoding="utf-8",
+    )
+
 (HERE / "index.min.json").write_text(
     json.dumps(entries, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
 )

@@ -13,6 +13,9 @@ export KEY_STORE_PASSWORD=tachimanga-repo
 export ALIAS=repo
 export KEY_PASSWORD=tachimanga-repo
 
+# Auto-bump de versionCode en módulos cuyo código cambió
+python3 "$HERE/version-bump.py"
+
 # Módulos propios vendored -> sustituyen al módulo upstream del mismo nombre
 for d in "$HERE"/patches/modules/*/*/; do
   rel="${d#"$HERE"/patches/modules/}"

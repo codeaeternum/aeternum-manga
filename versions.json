@@ -1,0 +1,30 @@
+{
+  "all/novelcool": {
+    "hash": "9e5c305df2699c77f073657463a13f3964fc0ccf851296acd303000e441e7daf",
+    "versionCode": 3
+  },
+  "all/webtoons": {
+    "hash": "b0a31b3b1f201dca387634cc908c912136cc1b4c590a4ee68b768cd3369564af",
+    "versionCode": 5
+  },
+  "es/hentaimode": {
+    "hash": "12ec9913c7d343e670c7d3ba7cda4c5e4938065245ad28f3e8c3bc932a47be06",
+    "versionCode": 3
+  },
+  "es/ikigaimangas": {
+    "hash": "04340159d4e1a2943d83131f6379df8dc346c5c0da829f832c5fe7e4474887e6",
+    "versionCode": 44
+  },
+  "es/lectortmoo": {
+    "hash": "d0b0fab31e6bfb9285729b468d1328b9f1ee691d592b5d0274b9fbe38131a412",
+    "versionCode": 7
+  },
+  "es/leercapitulo": {
+    "hash": "e7176e740315eb9b4d1116c2d9c9e211bf1b67baffa83320c36fb248700bea47",
+    "versionCode": 3
+  },
+  "es/manhwaweb": {
+    "hash": "2f27c6e0791b2a20dd1985b0bce10b16c00d42a5e1d230aec7b51aecf229d650",
+    "versionCode": 16
+  }
+}
