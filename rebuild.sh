@@ -31,6 +31,7 @@ MODULES=(
   es:lectortmoo
   all:novelcool
   all:webtoons
+  all:mangaplus
 )
 
 TASKS=()

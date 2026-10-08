@@ -8,6 +8,75 @@
   "extension_list": {
     "extensions": [
       {
+        "name": "MANGA Plus by SHUEISHA",
+        "package_name": "eu.kanade.tachiyomi.extension.all.mangaplus",
+        "resources": {
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.mangaplus-v1.6.1.apk",
+          "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.all.mangaplus.png",
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.mangaplus-v1.6.1.jar"
+        },
+        "extension_lib": "1.6",
+        "version_code": "106001",
+        "version_name": "1.6.1",
+        "content_warning": 1,
+        "sources": [
+          {
+            "id": "1998944621602463790",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "en",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          },
+          {
+            "id": "1286073245950890830",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "es",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          },
+          {
+            "id": "7642759409549978864",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "fr",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          },
+          {
+            "id": "932564577108614127",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "id",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          },
+          {
+            "id": "3444662672352788181",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "pt-BR",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          },
+          {
+            "id": "3520485566708512181",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "ru",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          },
+          {
+            "id": "6345211913721743017",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "th",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          },
+          {
+            "id": "4696259977267090434",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "vi",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          },
+          {
+            "id": "1893513843840146580",
+            "name": "MANGA Plus by SHUEISHA",
+            "language": "de",
+            "home_url": "https://mangaplus.shueisha.co.jp"
+          }
+        ]
+      },
+      {
         "name": "NovelCool",
         "package_name": "eu.kanade.tachiyomi.extension.all.novelcool",
         "resources": {

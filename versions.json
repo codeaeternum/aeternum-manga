@@ -26,5 +26,9 @@
   "es/manhwaweb": {
     "hash": "2f27c6e0791b2a20dd1985b0bce10b16c00d42a5e1d230aec7b51aecf229d650",
     "versionCode": 16
+  },
+  "all/mangaplus": {
+    "hash": "0515d9839ecb4638a35b8f955b76254f85cbc3eb15d55ba82901ecda2c90eda3",
+    "versionCode": 1
   }
 }

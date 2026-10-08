@@ -62,6 +62,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           ./gradlew \
+            :src:all:mangaplus:assembleRelease \
             :src:all:novelcool:assembleRelease \
             :src:all:webtoons:assembleRelease \
             :src:es:hentaimode:assembleRelease \
