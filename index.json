@@ -80,13 +80,13 @@
         "name": "NovelCool",
         "package_name": "eu.kanade.tachiyomi.extension.all.novelcool",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.novelcool-v1.6.4.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.novelcool-v1.6.5.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.all.novelcool.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.novelcool-v1.6.4.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.novelcool-v1.6.5.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106004",
-        "version_name": "1.6.4",
+        "version_code": "106005",
+        "version_name": "1.6.5",
         "content_warning": 2,
         "sources": [
           {
@@ -137,13 +137,13 @@
         "name": "Webtoons.com",
         "package_name": "eu.kanade.tachiyomi.extension.all.webtoons",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.webtoons-v1.6.6.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.webtoons-v1.6.7.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.all.webtoons.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.webtoons-v1.6.6.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.webtoons-v1.6.7.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106006",
-        "version_name": "1.6.6",
+        "version_code": "106007",
+        "version_name": "1.6.7",
         "content_warning": 1,
         "sources": [
           {
@@ -194,13 +194,13 @@
         "name": "HentaiMode",
         "package_name": "eu.kanade.tachiyomi.extension.es.hentaimode",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.hentaimode-v1.6.4.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.hentaimode-v1.6.5.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.hentaimode.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.hentaimode-v1.6.4.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.hentaimode-v1.6.5.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106004",
-        "version_name": "1.6.4",
+        "version_code": "106005",
+        "version_name": "1.6.5",
         "content_warning": 3,
         "sources": [
           {
@@ -215,13 +215,13 @@
         "name": "Ikigai Mangas",
         "package_name": "eu.kanade.tachiyomi.extension.es.ikigaimangas",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.ikigaimangas-v1.6.45.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.ikigaimangas-v1.6.46.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.ikigaimangas.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.ikigaimangas-v1.6.45.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.ikigaimangas-v1.6.46.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106045",
-        "version_name": "1.6.45",
+        "version_code": "106046",
+        "version_name": "1.6.46",
         "content_warning": 2,
         "sources": [
           {
@@ -236,13 +236,13 @@
         "name": "LectorTMOo",
         "package_name": "eu.kanade.tachiyomi.extension.es.lectortmoo",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.lectortmoo-v1.6.8.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.lectortmoo-v1.6.9.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.lectortmoo.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.lectortmoo-v1.6.8.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.lectortmoo-v1.6.9.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106008",
-        "version_name": "1.6.8",
+        "version_code": "106009",
+        "version_name": "1.6.9",
         "content_warning": 3,
         "sources": [
           {
@@ -263,13 +263,13 @@
         "name": "LeerCapitulo",
         "package_name": "eu.kanade.tachiyomi.extension.es.leercapitulo",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.leercapitulo-v1.6.4.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.leercapitulo-v1.6.5.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.leercapitulo.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.leercapitulo-v1.6.4.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.leercapitulo-v1.6.5.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106004",
-        "version_name": "1.6.4",
+        "version_code": "106005",
+        "version_name": "1.6.5",
         "content_warning": 1,
         "sources": [
           {
@@ -284,13 +284,13 @@
         "name": "ManhwaWeb",
         "package_name": "eu.kanade.tachiyomi.extension.es.manhwaweb",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.manhwaweb-v1.6.18.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.manhwaweb-v1.6.19.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.manhwaweb.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.manhwaweb-v1.6.18.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.manhwaweb-v1.6.19.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106018",
-        "version_name": "1.6.18",
+        "version_code": "106019",
+        "version_name": "1.6.19",
         "content_warning": 2,
         "sources": [
           {
