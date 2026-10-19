@@ -12,6 +12,7 @@ abstract class UriPartFilter(
 
 class GenreFilter : UriPartFilter("genre", "Género", GENRES)
 class ThemeFilter : UriPartFilter("theme", "Temática", THEMES)
+class DemographicFilter : UriPartFilter("demographic", "Demografía", DEMOGRAPHICS)
 class TypeFilter : UriPartFilter("type", "Tipo", TYPES)
 class StatusFilter : UriPartFilter("status", "Estado", STATUSES)
 class SortFilter : UriPartFilter("sort", "Orden", SORTS)
@@ -140,6 +141,14 @@ private val THEMES = arrayOf(
     "Villainess" to "villainess",
     "Virtual Reality" to "virtual-reality",
     "Zombies" to "zombies",
+)
+
+private val DEMOGRAPHICS = arrayOf(
+    "<Seleccionar>" to "",
+    "Shōnen" to "shonen",
+    "Shōjo" to "shojo",
+    "Seinen" to "seinen",
+    "Josei" to "josei",
 )
 
 private val TYPES = arrayOf(

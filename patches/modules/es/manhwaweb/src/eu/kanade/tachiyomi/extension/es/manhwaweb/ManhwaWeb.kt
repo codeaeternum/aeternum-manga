@@ -39,8 +39,16 @@ abstract class ManhwaWeb : KeiSource() {
     override suspend fun getMangaByUrl(url: HttpUrl): SManga? {
         if (url.host != baseUrl.toHttpUrl().host) return null
         val segments = url.pathSegments.filter { it.isNotEmpty() }
-        if (segments.size != 2 || (segments[0] != "manhwa" && segments[0] != "manga")) return null
-        return getDetailsBySlug(segments[1]).toSManga()
+        if (segments.size != 2) return null
+        val slug = when (segments[0]) {
+            "manhwa", "manga" -> segments[1]
+            // Reader URLs carry the chapter id; the chapter payload holds the
+            // manga's slug.
+            "leer" -> client.get("$apiUrl/chapters/see/${segments[1]}")
+                .parseAs<PagesPayloadDto>().mangaSlug
+            else -> null
+        } ?: return null
+        return getDetailsBySlug(slug).toSManga()
     }
 
     override suspend fun getSearchMangaList(page: Int, query: String, filters: FilterList): MangasPage {

@@ -64,6 +64,7 @@ abstract class LeerCapitulo : KeiSource() {
         Filter.Header("Los filtros se pueden combinar con la búsqueda por texto."),
         GenreFilter(),
         ThemeFilter(),
+        DemographicFilter(),
         TypeFilter(),
         StatusFilter(),
         SortFilter(),
@@ -124,8 +125,11 @@ abstract class LeerCapitulo : KeiSource() {
             }
         }
 
-        genre = select("a.badge[href^='/manga/?genre='], a.badge[href^='/manga/?theme=']")
-            .joinToString { it.text() }
+        genre = (
+            select("a.badge[href^='/manga/?genre='], a.badge[href^='/manga/?theme=']")
+                .map { it.text() } + listOfNotNull(fact("Demografia"))
+            )
+            .joinToString()
         author = fact("Autor")
         artist = fact("Dibujo")
         status = fact("Estado").toStatus()

@@ -34,6 +34,8 @@ class MangaDetailDto(
     val synopsis: String? = null,
     val cover: String? = null,
     val status: String? = null,
+    val author: String? = null,
+    val artist: String? = null,
     val genres: List<GenreDto> = emptyList(),
     val chapters: List<ChapterDto> = emptyList(),
 )
@@ -53,4 +55,10 @@ class ChapterDto(
 class ChapterPagesResponse(val data: ChapterPagesDto)
 
 @Serializable
-class ChapterPagesDto(val pages: List<String> = emptyList())
+class ChapterPagesDto(
+    val pages: List<String> = emptyList(),
+    val manga: ChapterMangaDto? = null,
+)
+
+@Serializable
+class ChapterMangaDto(val slug: String)

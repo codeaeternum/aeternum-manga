@@ -19,6 +19,7 @@ import kotlinx.serialization.json.JsonElement
 import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -85,8 +86,18 @@ abstract class Webtoons : KeiSource() {
     private fun mangaFromElement(element: Element): SManga = SManga.create().apply {
         setUrlWithoutDomain(element.absUrl("href"))
         title = element.selectFirst(".title")!!.text()
-        thumbnail_url = element.selectFirst("img")?.absUrl("src")
+        thumbnail_url = element.selectFirst("img")?.absUrl("src")?.fullSizeThumb()
     }
+
+    // pstatic serves a compressed or cropped derivative when ?type= is present;
+    // the bare URL returns the original image
+    private fun String.fullSizeThumb(): String = toHttpUrlOrNull()
+        ?.takeIf { it.host.endsWith(".pstatic.net") }
+        ?.newBuilder()
+        ?.removeAllQueryParameters("type")
+        ?.build()
+        ?.toString()
+        ?: this
 
     override suspend fun getLatestUpdates(page: Int): MangasPage {
         val day = when (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
@@ -136,7 +147,9 @@ abstract class Webtoons : KeiSource() {
 
     override suspend fun getMangaByUrl(url: HttpUrl): SManga? {
         if (!url.host.isWebtoonsHost()) return null
-        val titleNo = url.queryParameter("title_no")?.toIntOrNull() ?: return null
+        val titleNo = url.queryParameter("title_no")?.toIntOrNull()
+            ?: url.queryParameter("titleNo")?.toIntOrNull()
+            ?: return null
         val path = url.pathSegments
 
         // Every language ships as its own source; only the matching one resolves the link.
@@ -182,12 +195,12 @@ abstract class Webtoons : KeiSource() {
                 ?: detailElement?.selectFirst(".author_area")?.ownText() ?: author
             genre = detailElement?.select(".genre").orEmpty().joinToString { it.text() }
             description = infoElement?.selectFirst("p.summary")?.text()
-            status = with(infoElement?.selectFirst("p.day_info")?.text().orEmpty()) {
-                when {
-                    contains("UP") || contains("EVERY") || contains("NOUVEAU") -> SManga.ONGOING
-                    contains("END") || contains("COMPLETED") || contains("TERMINÉ") -> SManga.COMPLETED
-                    else -> SManga.UNKNOWN
-                }
+            // day_info text is localized ("COMPLETED", "FINALIZADAS",
+            // "ABGESCHLOSSEN", ...); the icon class is locale-independent
+            status = when {
+                infoElement?.selectFirst("p.day_info .txt_ico_completed") != null -> SManga.COMPLETED
+                infoElement?.selectFirst("p.day_info .txt_ico_up") != null -> SManga.ONGOING
+                else -> SManga.UNKNOWN
             }
             thumbnail_url = run {
                 val bannerFile = document.selectFirst(".detail_header .thmb img")
@@ -201,6 +214,7 @@ abstract class Webtoons : KeiSource() {
                     ?.lastOrNull()
                 val thumbnail = document.selectFirst("head meta[property=\"og:image\"]")
                     ?.attr("content")
+                    ?.fullSizeThumb()
 
                 // replace banner image for toons in library
                 if (oldThumbFile != null && oldThumbFile != bannerFile) {

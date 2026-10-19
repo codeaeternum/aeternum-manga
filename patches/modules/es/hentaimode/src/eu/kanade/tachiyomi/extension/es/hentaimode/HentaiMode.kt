@@ -57,8 +57,8 @@ abstract class HentaiMode : KeiSource() {
 
     // El buscador del sitio (/buscar?s=) está roto: redirige a la portada.
     // Lo único que responde a texto libre son los endpoints por nombre
-    // (/artist?s=, /grupo?s=) y los índices /lista/* que resuelven a
-    // /etiqueta/N y /serie/N.
+    // (/artist?s=, /group?s=) y los índices /lista/* que resuelven a
+    // /etiqueta/N, /serie/N y /personaje/N.
     override suspend fun getSearchMangaList(page: Int, query: String, filters: FilterList): MangasPage {
         val q = query.trim()
         if (q.isNotEmpty()) return MangasPage(searchByName(q), hasNextPage = false)
@@ -70,9 +70,10 @@ abstract class HentaiMode : KeiSource() {
     private suspend fun searchByName(query: String): List<SManga> = coroutineScope {
         awaitAll(
             async { fetchMangas(nameUrl("artist", query)) },
-            async { fetchMangas(nameUrl("grupo", query)) },
+            async { fetchMangas(nameUrl("group", query)) },
             async { entityMangas("etiquetas", "etiqueta", query) },
             async { entityMangas("series", "serie", query) },
+            async { entityMangas("personajes", "personaje", query) },
         ).flatten().distinctBy { it.url }
     }
 
@@ -107,7 +108,7 @@ abstract class HentaiMode : KeiSource() {
     }
 
     override fun getFilterList(data: JsonElement?): FilterList = FilterList(
-        Filter.Header("Búsqueda de texto solo por nombre de artista, grupo, etiqueta o serie (el buscador del sitio está caído)"),
+        Filter.Header("Búsqueda de texto solo por nombre de artista, grupo, etiqueta, serie o personaje (el buscador del sitio está caído)"),
         CategoryFilter(),
         TagFilter(),
         SerieFilter(),
@@ -186,8 +187,11 @@ abstract class HentaiMode : KeiSource() {
 
     override suspend fun getMangaByUrl(url: HttpUrl): SManga? {
         if (url.host.removePrefix("www.") != host) return null
-        if (url.pathSegments.firstOrNull() != "g") return null
-        val id = url.pathSegments.getOrNull(1) ?: return null
+        // /g/<id> and /leer/<id> share the same gallery id
+        val id = when (url.pathSegments.firstOrNull()) {
+            "g", "leer" -> url.pathSegments.getOrNull(1)
+            else -> null
+        } ?: return null
 
         return runCatching {
             val document = client.get("$baseUrl/g/$id").asJsoup()
@@ -199,21 +203,22 @@ abstract class HentaiMode : KeiSource() {
 
     override suspend fun getMangasByUrl(url: HttpUrl, page: Int): MangasPage {
         if (url.host.removePrefix("www.") != host) return MangasPage(emptyList(), false)
-        if (url.pathSegments.firstOrNull() == "g") return super.getMangasByUrl(url, page)
+        if (url.pathSegments.firstOrNull() in listOf("g", "leer")) return super.getMangasByUrl(url, page)
 
         // listing URLs like /etiqueta/N, /serie/N, /personaje/N, /ultimos-*,
-        // /artist?s=, /grupo?s= all render the same book grid
+        // /artist?s=, /group?s= all render the same book grid
         return MangasPage(fetchMangas(url.toString()), hasNextPage = false)
     }
 
     private fun String.entityKey(): String = lowercase()
         .replace('♀', ' ')
         .replace('♂', ' ')
-        .replace(Regex("\\s+"), " ")
+        .replace(WHITESPACE, " ")
         .trim()
 
     companion object {
         private val PAGES_REGEX = Regex("""pages\s*=\s*(\[[\s\S]*?]);""")
         private val TRAILING_COMMA = Regex(""",\s*([}\]])""")
+        private val WHITESPACE = Regex("\\s+")
     }
 }

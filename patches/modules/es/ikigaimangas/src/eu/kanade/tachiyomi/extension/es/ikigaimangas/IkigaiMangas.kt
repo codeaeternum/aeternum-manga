@@ -201,11 +201,12 @@ abstract class IkigaiMangas : KeiSource() {
         val segments = url.pathSegments
         val slug = when {
             segments.getOrNull(0) == "series" -> segments.getOrNull(1)
-            // Chapter pages carry a link back to their series.
+            // Chapter pages have no series backlink; the slug only exists in the
+            // serialized Qwik state as "<series name>","<slug>","<type>".
             segments.getOrNull(0) == "capitulo" ->
-                fetchDocument("$activeBaseUrl${url.encodedPath}".toHttpUrl())
-                    .selectFirst("""a.group[href^="/series/"]""")
-                    ?.seriesSlug()
+                SERIES_SLUG_REGEX
+                    .find(fetchDocument("$activeBaseUrl${url.encodedPath}".toHttpUrl()).html())
+                    ?.groupValues?.get(1)
             else -> null
         }?.takeIf(String::isNotEmpty) ?: return null
 
@@ -281,9 +282,16 @@ abstract class IkigaiMangas : KeiSource() {
             // Gated chapter served despite the cookie (stale domain hop): retry once.
             document = fetchDocument("$activeBaseUrl${chapter.url}".toHttpUrl())
         }
-        return document.select("""section div > img[alt^="Página"]""").mapIndexed { index, img ->
-            Page(index, imageUrl = img.attr("abs:src"))
-        }
+        // Pages are never SSR'd as <img>; their CDN URLs only appear inside the
+        // serialized Qwik state blob, in order. The blob can carry previews of
+        // adjacent chapters, so prefer URLs scoped to this chapter's id.
+        val images = PAGE_URL_REGEX.findAll(document.html())
+            .map { it.value }
+            .distinct()
+            .toList()
+        val chapterId = chapter.url.substringAfter("/capitulo/").substringBefore("/")
+        val pages = images.filter { "/$chapterId/" in it }.ifEmpty { images }
+        return pages.mapIndexed { index, url -> Page(index, imageUrl = url) }
     }
 
     override fun imageRequest(page: Page): Request = super.imageRequest(page).newBuilder()
@@ -308,6 +316,8 @@ abstract class IkigaiMangas : KeiSource() {
         private const val NSFW_COOKIE = "is-adult-enabled"
         private const val CHAPTER_SELECTOR = "section.card > ul.grid a.card"
         private val DOMAIN_REGEX = Regex("""i\("(https://[^"]+)""")
+        private val PAGE_URL_REGEX = Regex("""https://[a-z0-9]+\.ikigaimangas\.cloud/series/\d+/\d+/[^"\\\s]+""")
+        private val SERIES_SLUG_REGEX = Regex("""","([a-z0-9]+(?:-[a-z0-9]+)*)","(comic|manga|novel)""")
         private val DATE_FORMAT = DateTimeFormatter.ofPattern("EEE MMM dd yyyy HH:mm:ss 'GMT'Z", Locale.ENGLISH)
     }
 }

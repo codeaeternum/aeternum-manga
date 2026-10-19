@@ -6,7 +6,7 @@ plugins {
 
 keiyoushi {
     name = "ManhwaWeb"
-    versionCode = 17
+    versionCode = 18
     contentWarning = ContentWarning.MIXED
     libVersion = "1.6"
 
@@ -17,6 +17,8 @@ keiyoushi {
 
     deeplink {
         path("/manhwa/..*")
+        path("/manga/..*")
+        path("/leer/..*")
     }
 }
 

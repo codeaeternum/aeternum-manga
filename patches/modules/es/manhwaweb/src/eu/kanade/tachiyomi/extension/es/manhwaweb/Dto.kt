@@ -119,7 +119,7 @@ class ComicDetailsDto(
     @SerialName("_sinopsis") private val synopsis: String? = null,
     @SerialName("_status") private val status: String? = null,
     @SerialName("_imagen") private val thumbnail: String? = null,
-    @SerialName("_categoris") private val genres: List<Map<Int, String>> = emptyList(),
+    @SerialName("_categoris") private val genres: List<Map<String, String>> = emptyList(),
     @SerialName("autor") private val authors: List<ComicPersonDto> = emptyList(),
     @SerialName("artista") private val artists: List<ComicPersonDto> = emptyList(),
     @SerialName("_extras") private val extras: ComicExtrasDto? = null,
@@ -220,8 +220,11 @@ class ChapterGroupDto(
 @Serializable
 class PagesPayloadDto(
     @SerialName("chapter") private val chapter: PagesChapterDto? = null,
+    @SerialName("real_id") private val realId: String? = null,
+    @SerialName("_id") private val id: String? = null,
 ) {
     val images get() = chapter?.images.orEmpty()
+    val mangaSlug get() = realId ?: id
 }
 
 @Serializable

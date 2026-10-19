@@ -6,7 +6,7 @@ plugins {
 
 keiyoushi {
     name = "NovelCool"
-    versionCode = 3
+    versionCode = 4
     contentWarning = ContentWarning.MIXED
     libVersion = "1.6"
 
@@ -24,6 +24,12 @@ keiyoushi {
             lang = langCode
             baseUrl = "https://$sub.novelcool.com"
         }
+    }
+
+    // no host(): one intent filter is generated covering every source baseUrl
+    deeplink {
+        path("/novel/..*")
+        path("/chapter/..*/..*")
     }
 }
 

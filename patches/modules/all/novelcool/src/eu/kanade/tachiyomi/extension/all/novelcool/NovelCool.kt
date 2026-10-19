@@ -45,7 +45,8 @@ abstract class NovelCool : KeiSource() {
         )
 
         val list = client.post(url, payload.toJsonRequestBody()).parseAs<MangaListResponse>().list
-        return MangasPage(list.map { it.toSManga() }, list.size == PAGE_SIZE)
+        val entries = list.filterNot(MangaDto::isTextNovel).map { it.toSManga() }
+        return MangasPage(entries, hasNextPage = list.size == PAGE_SIZE)
     }
 
     // Manga details and the chapter list are separate API endpoints, so honor the
@@ -57,16 +58,22 @@ abstract class NovelCool : KeiSource() {
         fetchChapters: Boolean,
     ): SMangaUpdate = coroutineScope {
         val bookId = manga.url.substringBefore('/')
-        val detailsAsync = async { if (fetchDetails) fetchMangaDetails(bookId) else manga }
+        val infoAsync = async { if (fetchDetails) fetchBookInfo(bookId) else null }
         val chaptersAsync = async { if (fetchChapters) fetchChapterList(bookId) else chapters }
 
-        SMangaUpdate(manga = detailsAsync.await(), chapters = chaptersAsync.await())
+        val info = infoAsync.await()
+        SMangaUpdate(
+            manga = info?.toSManga() ?: manga,
+            // a text-first book is a novel mislabeled as manga; its image
+            // chapters (if any) are stray extras, not a real chapter list
+            chapters = if (info?.isTextNovel == true) emptyList() else chaptersAsync.await(),
+        )
     }
 
-    private suspend fun fetchMangaDetails(bookId: String): SManga = client.post(
+    private suspend fun fetchBookInfo(bookId: String): BookInfoDto = client.post(
         "$apiUrl/book/info/",
         BookPayload(APP_ID, APP_SECRET, apiLang, bookId).toJsonRequestBody(),
-    ).parseAs<BookInfoResponse>().info.toSManga()
+    ).parseAs<BookInfoResponse>().info
 
     private suspend fun fetchChapterList(bookId: String): List<SChapter> = client.post(
         "$apiUrl/chapter/book_list/",
@@ -90,14 +97,17 @@ abstract class NovelCool : KeiSource() {
         if (!url.host.endsWith("novelcool.com")) return null
         val path = url.pathSegments
         val bookId = when {
-            // /chapter/<slug>/<chapter_id>/
-            path.size == 3 && path[0] == "chapter" -> runCatching { chapterInfo(path[2]).bookId }.getOrNull()
+            // /chapter/<slug>/<chapter_id>.html - the site also accepts a trailing slash form
+            path.size == 3 && path[0] == "chapter" -> runCatching {
+                chapterInfo(path[2].substringBeforeLast('.')).bookId
+            }.getOrNull()
             // /novel/<slug>.html - the book id only exists in the page markup
             path.size == 2 && path[0] == "novel" -> fetchBookId(url)
             else -> null
         } ?: return null
 
-        return runCatching { fetchMangaDetails(bookId) }.getOrNull()
+        val info = runCatching { fetchBookInfo(bookId) }.getOrNull()
+        return info?.takeUnless { it.isTextNovel }?.toSManga()
     }
 
     private suspend fun chapterInfo(chapterId: String): ChapterInfoDto = client.post(

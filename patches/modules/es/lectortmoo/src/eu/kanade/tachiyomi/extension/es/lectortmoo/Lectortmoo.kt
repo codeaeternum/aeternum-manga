@@ -11,15 +11,15 @@ import keiyoushi.network.get
 import keiyoushi.network.rateLimit
 import keiyoushi.source.KeiSource
 import keiyoushi.utils.parseAs
+import keiyoushi.utils.tryParse
 import kotlinx.serialization.json.JsonElement
 import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.text.SimpleDateFormat
-import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 @Source
 abstract class Lectortmoo : KeiSource() {
@@ -80,6 +80,8 @@ abstract class Lectortmoo : KeiSource() {
             }
         }
         genre = genres.joinToString { it.name }
+        author = this@toSManga.author
+        artist = this@toSManga.artist
         status = this@toSManga.status.toStatus()
     }
 
@@ -88,9 +90,7 @@ abstract class Lectortmoo : KeiSource() {
             url = ch.slug
             name = ch.title ?: "Capítulo ${ch.number.orEmpty()}"
             chapter_number = ch.number?.toFloatOrNull() ?: -1f
-            date_upload = ch.publishedAt?.let {
-                runCatching { DATE_FORMAT.parse(it.take(10))!!.time }.getOrNull()
-            } ?: 0L
+            date_upload = Instant.tryParse(ch.publishedAt)
         }
     }.sortedByDescending { it.chapter_number }
 
@@ -117,7 +117,12 @@ abstract class Lectortmoo : KeiSource() {
         val segments = url.pathSegments
         val slug = when {
             segments.size == 2 && segments[0] == "manga" -> segments[1]
-            segments.size == 1 && segments[0].contains("-capitulo-") -> segments[0].substringBeforeLast("-capitulo-")
+            // Chapter slugs can embed a lang suffix (e.g. "-es-la-capitulo-N"),
+            // so resolve the parent manga via the chapter endpoint instead.
+            segments.size == 1 && segments[0].contains("-capitulo-") ->
+                runCatching {
+                    client.get("$apiUrl/chapters/${segments[0]}").parseAs<ChapterPagesResponse>().data.manga?.slug
+                }.getOrNull()
             else -> return null
         }
 
@@ -152,9 +157,5 @@ abstract class Lectortmoo : KeiSource() {
             contains("cancel") -> SManga.CANCELLED
             else -> SManga.UNKNOWN
         }
-    }
-
-    companion object {
-        private val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     }
 }
