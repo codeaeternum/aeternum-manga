@@ -1,0 +1,54 @@
+name: Framework watch (upstream keiyoushi)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Mensual: día 1 a las 08:00 UTC
+    - cron: "0 8 1 * *"
+
+permissions:
+  issues: write
+
+env:
+  PIN: 8c3323cca3615b00edb7a5c79603ee434b2864f8
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Diff framework files pin vs upstream main
+        id: diff
+        run: |
+          git init -q upstream && cd upstream
+          git remote add origin https://github.com/keiyoushi/extensions-source
+          git fetch -q --depth 1 origin "$PIN"
+          git fetch -q --depth 1 origin main
+          git diff --name-only "$PIN" FETCH_HEAD \
+            | grep -vE '^src/' \
+            > ../framework-diff.txt || true
+          cd ..
+          if [ -s framework-diff.txt ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Report drift
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh issue list --state open --search "in:title \"Framework upstream\"" --json number --jq '.[0].number' || true)
+          BODY="El framework de keiyoushi (commit pin \`$PIN\`) diverge de \`main\` en archivos de build:
+
+          \`\`\`
+          $(cat framework-diff.txt | head -50)
+          \`\`\`
+
+          Revisar si conviene actualizar el pin en \`.github/workflows/rebuild.yml\`."
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh issue create --title "Framework upstream diverge del pin" --body "$BODY"
+          fi
