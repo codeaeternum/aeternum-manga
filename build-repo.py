@@ -207,11 +207,19 @@ if changes:
     import datetime
 
     changelog = HERE / "CHANGELOG.md"
-    header = f"## {datetime.date.today().isoformat()}\n\n" + "\n".join(changes) + "\n\n"
-    changelog.write_text(
-        "# Changelog\n\n" + header + (changelog.read_text(encoding="utf-8")[len("# Changelog\n\n"):] if changelog.exists() else ""),
-        encoding="utf-8",
-    )
+    today = datetime.date.today().isoformat()
+    old = changelog.read_text(encoding="utf-8") if changelog.exists() else "# Changelog\n\n"
+    body = old[len("# Changelog\n\n"):]
+    if body.startswith(f"## {today}\n"):
+        # mismo dia: fusionar entries bajo la seccion existente
+        first_end = body.index("\n\n") + 2
+        body = body[:first_end] + "\n".join(changes) + "\n" + body[first_end:]
+        changelog.write_text("# Changelog\n\n" + body, encoding="utf-8")
+    else:
+        changelog.write_text(
+            "# Changelog\n\n" + f"## {today}\n\n" + "\n".join(changes) + "\n\n" + body,
+            encoding="utf-8",
+        )
 
 (HERE / "index.min.json").write_text(
     json.dumps(entries, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
