@@ -284,13 +284,13 @@
         "name": "ManhwaWeb",
         "package_name": "eu.kanade.tachiyomi.extension.es.manhwaweb",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.manhwaweb-v1.6.16.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-es.manhwaweb-v1.6.17.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.es.manhwaweb.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.manhwaweb-v1.6.16.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-es.manhwaweb-v1.6.17.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106016",
-        "version_name": "1.6.16",
+        "version_code": "106017",
+        "version_name": "1.6.17",
         "content_warning": 2,
         "sources": [
           {

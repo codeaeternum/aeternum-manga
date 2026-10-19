@@ -25,7 +25,7 @@ check "LectorTMOo API"    "https://lectortmo.online/api/mangas?page=1"   200 '"d
 check "TuMangaHentai API" "https://tumangahentai.com/api/mangas?page=1"  200 '"data"'
 
 # ManhwaWeb (backend Railway)
-check "ManhwaWeb API"     "https://manhwawebbackend-production.up.railway.app/manhwa/nuevos" 200
+check "ManhwaWeb API"     "https://api.manhwaweb.com/manhwa/nuevos" 200
 
 # Ikigai: landing + dominio activo dinámico
 IKIGAI_LANDING=$(curl -sL --max-time 20 -A "$UA" "https://ikigaimangas.com")

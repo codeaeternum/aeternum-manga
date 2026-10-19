@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.seconds
 @Source
 abstract class ManhwaWeb : KeiSource() {
 
-    private val apiUrl = "https://manhwawebbackend-production.up.railway.app"
+    private val apiUrl = "https://api.manhwaweb.com"
 
     override fun OkHttpClient.Builder.configureClient() = rateLimit(2, 1.seconds)
 
