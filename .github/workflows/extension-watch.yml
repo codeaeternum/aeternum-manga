@@ -1,0 +1,133 @@
+name: Extension watch (fuentes + upstream)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Semanal: lunes 09:00 UTC
+    - cron: "0 9 * * 1"
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repo (aeternum-manga)
+        uses: actions/checkout@v4
+
+      - name: Healthcheck de fuentes (un reintento a los 60s)
+        id: health
+        run: |
+          echo "== Intento 1 ==" | tee health-result.txt
+          if ./healthcheck.sh | tee -a health-result.txt; then
+            echo "status=ok" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          {
+            echo ""
+            echo "== Falló el intento 1 — reintento único tras 60s =="
+          } | tee -a health-result.txt
+          sleep 60
+          if ./healthcheck.sh | tee -a health-result.txt; then
+            echo "status=ok" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=fail" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout fork extensions-source
+        id: extsrc
+        uses: actions/checkout@v4
+        # Suave: si el clone falla, el check-upstream queda "no verificado"
+        continue-on-error: true
+        with:
+          repository: codeaeternum/extensions-source
+          path: ext-src
+          # Debe cubrir los commits propios del fork +1: la frontera shallow
+          # tiene que caer en un commit conocido por keiyoushi para que el
+          # fetch del script traiga solo el delta (como en el clone local).
+          fetch-depth: 30
+
+      - name: Commits upstream sin integrar (check-upstream.sh)
+        id: upstream
+        if: always()
+        env:
+          UPSTREAM_REMOTE: upstream
+        run: |
+          if ! git -C ext-src rev-parse --verify -q HEAD >/dev/null 2>&1; then
+            echo "Upstream NO verificado: clone de codeaeternum/extensions-source falló o está vacío" \
+              | tee upstream-result.txt
+            echo "status=no-verificado" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # check-upstream.sh busca el árbol fuente en ../extensions-source
+          ln -sfn "$PWD/ext-src" "$PWD/../extensions-source"
+          git -C ext-src remote add upstream \
+            https://github.com/keiyoushi/extensions-source.git || true
+          # Acota el fetch si la negociación shallow no encuentra frontera común
+          git -C ext-src config remote.upstream.promisor true
+          git -C ext-src config remote.upstream.partialclonefilter blob:none
+          if timeout 600 ./check-upstream.sh | tee upstream-result.txt; then
+            echo "status=ok" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=no-verificado" >> "$GITHUB_OUTPUT"
+            printf '\n(no se pudo verificar upstream: clone/fetch falló)\n' \
+              >> upstream-result.txt
+          fi
+
+      - name: Issue 'fuentes' — crear, comentar o cerrar
+        if: always()
+        env:
+          HEALTH: ${{ steps.health.outputs.status }}
+          UPSTREAM: ${{ steps.upstream.outputs.status }}
+        run: |
+          # El label puede no existir todavía en el repo
+          LABEL_FLAG=()
+          if gh label create fuentes --color fbca04 \
+              --description "Alertas del watch de fuentes" --force 2>/dev/null; then
+            LABEL_FLAG=(--label fuentes)
+          else
+            echo "warn: no se pudo crear/obtener el label 'fuentes'"
+          fi
+
+          OPEN_ISSUE=$(gh issue list --state open --label fuentes --limit 1 \
+            --json number --jq '.[0].number // empty' || true)
+
+          PENDING=0
+          if grep -q "commit(s) pendientes" upstream-result.txt 2>/dev/null; then
+            PENDING=1
+          fi
+
+          if [[ "$HEALTH" != "ok" || "$PENDING" == "1" || "$UPSTREAM" != "ok" ]]; then
+            {
+              echo "**Reporte $(date -u +'%Y-%m-%d %H:%M UTC')**"
+              echo
+              echo "### Healthcheck"
+              echo '```'
+              cat health-result.txt 2>/dev/null || echo "(sin output)"
+              echo '```'
+              echo
+              echo "### Upstream (check-upstream.sh)"
+              echo '```'
+              cat upstream-result.txt 2>/dev/null || echo "(sin output)"
+              echo '```'
+              echo
+              echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            } > report.md
+            if [[ -n "$OPEN_ISSUE" ]]; then
+              gh issue comment "$OPEN_ISSUE" --body-file report.md
+            else
+              gh issue create --title "Alerta de fuentes: $(date -u +%Y-%m-%d)" \
+                "${LABEL_FLAG[@]}" --body-file report.md
+            fi
+          elif [[ -n "$OPEN_ISSUE" ]]; then
+            gh issue close "$OPEN_ISSUE" \
+              --comment "Todo recuperado: healthcheck OK y upstream verificado sin commits pendientes."
+          else
+            echo "Todo verde y sin issue abierto — nada que hacer."
+          fi

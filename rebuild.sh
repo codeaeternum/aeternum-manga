@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
 # Recompila todas las extensiones y regenera el repo (index.pb + index.min.json + APK/JAR).
 # Sincroniza los módulos propios (patches/modules/) dentro del árbol fuente antes de compilar.
-# Uso: ./rebuild.sh
+# Antes de nada corre ./healthcheck.sh como gate: si alguna fuente está caída
+# imprime el resumen de fallos y aborta (saltar con --no-healthcheck).
+# Uso: ./rebuild.sh [--no-healthcheck]
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 SRC_DIR="$HERE/../extensions-source"
+
+if [[ "${1:-}" != "--no-healthcheck" ]]; then
+  if ! "$HERE/healthcheck.sh"; then
+    echo "rebuild abortado: healthcheck falló (--no-healthcheck para forzar)" >&2
+    exit 1
+  fi
+fi
 
 export JAVA_HOME=/opt/homebrew/opt/openjdk@17
 export ANDROID_HOME="$HOME/Library/Android/sdk"

@@ -1,5 +1,7 @@
 # Aeternum Manga
 
+[![Extension watch](https://github.com/codeaeternum/aeternum-manga/actions/workflows/extension-watch.yml/badge.svg)](https://github.com/codeaeternum/aeternum-manga/actions/workflows/extension-watch.yml)
+
 Repo personal de extensiones para Tachimanga con **scrapers propios** —
 las 7 extensiones están escritas y mantenidas aquí (en `patches/modules/`),
 iOS-nativas desde cero. El framework de build (`KeiSource`, extension-lib,
@@ -46,9 +48,11 @@ patches/modules/<lang>/<ext>/   ← código fuente propio de cada extensión
 build-repo.py                   ← genera index.pb + index.min.json + apk/ + jar/
 rebuild.sh                      ← sync módulos → compila → regenera repo
 healthcheck.sh                  ← verifica endpoints de las 8 fuentes
+check-upstream.sh               ← commits de keiyoushi pendientes por módulo
 .github/workflows/
   rebuild.yml                   ← semanal: compila todo desde framework pinned
   healthcheck.yml               ← diario: ping a fuentes, abre issue si caen
+  extension-watch.yml           ← semanal: healthcheck + watch upstream → issue 'fuentes'
 ```
 
 ## Recompilar local

@@ -16,17 +16,21 @@ if [[ ! -d "$SRC_DIR/.git" ]]; then
 fi
 
 cd "$SRC_DIR"
-echo "==> git fetch origin main"
-git fetch -q origin main || { echo "ERROR: fetch falló (¿sin red?)" >&2; exit 1; }
+# Remote de upstream configurable: local el fork usa "origin"=keiyoushi;
+# en CI el clone tiene origin=fork y keiyoushi se añade como "upstream".
+UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-origin}"
+UPSTREAM_REF="${UPSTREAM_REF:-$UPSTREAM_REMOTE/main}"
+echo "==> git fetch $UPSTREAM_REMOTE main"
+git fetch -q "$UPSTREAM_REMOTE" main || { echo "ERROR: fetch falló (¿sin red?)" >&2; exit 1; }
 
-# Clone shallow: no hay merge-base. HEAD..origin/main ya es "lo que ellos
+# Clone shallow: no hay merge-base. HEAD..$UPSTREAM_REF ya es "lo que ellos
 # tienen y nosotros no". Los commits-frontera del graft (sin padre en el
 # object store) aparecen como si tocaran TODOS los archivos — hay que
 # excluirlos o ensucian cada módulo.
-BOUNDARY=$(git rev-list --max-parents=0 --abbrev-commit origin/main | tr '\n' ' ')
+BOUNDARY=$(git rev-list --max-parents=0 --abbrev-commit "$UPSTREAM_REF" | tr '\n' ' ')
 
 echo "HEAD del fork:   $(git log --oneline -1 HEAD | cut -c1-70)"
-echo "origin/main:     $(git log --oneline -1 origin/main | cut -c1-70)"
+echo "$UPSTREAM_REF: $(git log --oneline -1 "$UPSTREAM_REF" | cut -c1-70)"
 echo
 
 # Módulos publicados (los que rebuild.sh compila -> aeternum-manga/jar)
@@ -35,11 +39,19 @@ MODULES=(
     all:mangaplus all:novelcool all:webtoons
 )
 
+# Commits revisados y descartados a propósito (cubierto ya por un parche
+# propio, refactor sin efecto, etc.) — un SHA prefijo + comentario por línea.
+SKIP_FILE="$HERE/.upstream-skip"
+SKIP=""
+[[ -f "$SKIP_FILE" ]] && SKIP=$(grep -vE '^\s*(#|$)' "$SKIP_FILE" | awk '{print $1}')
+
 TOTAL=0
 for rel in "${MODULES[@]}"; do
     dir="src/${rel/://}"
-    # Commits upstream que tocan el módulo, menos los graft-boundary
-    lines=$(git log --oneline HEAD..origin/main -- "$dir" | { grep -vF -f <(printf '%s\n' $BOUNDARY) || true; })
+    # Commits upstream que tocan el módulo, menos graft-boundary y skips
+    lines=$(git log --oneline HEAD.."$UPSTREAM_REF" -- "$dir" \
+        | { grep -vF -f <(printf '%s\n' $BOUNDARY) || true; } \
+        | { [[ -n "$SKIP" ]] && grep -vF -f <(printf '%s\n' $SKIP) || cat; })
     count=0
     [[ -n "$lines" ]] && count=$(wc -l <<< "$lines" | tr -d ' ')
     if [[ "$count" -eq 0 ]]; then
