@@ -1,7 +1,9 @@
 # Commits de upstream revisados y descartados a proposito.
 # Formato: <sha-abreviado-como-lo-muestra-git-log>  # motivo
 # Anadir una linea por cada commit que NO se va a portar.
-65e71dd7  # ManhwaWeb #20175: chapters por version — ya cubierto por nuestro toSChapters (va mas lejos: fallbacks + dedup)
+65e71dd7    # ManhwaWeb #20175: chapters por version — ya cubierto por nuestro toSChapters (va mas lejos: fallbacks + dedup)
 c692896d04  # ManhwaWeb #19959: api.manhwaweb.com + autor/artista — ya cubierto; ademas conservamos _extras nullable como fallback
 8eb06614d3  # MangaPlus #19834: refactor cosmetic — migra a XorInterceptor de core; comportamiento identico, no vale tocar la copia vendored
-58bceb5eae  # Webtoons #19591: fix de cookies duplicadas — la parte de core ya va en fork@937f0794; el modulo solo llevaba bump de versionCode
+58bceb5eae  # Webtoons #19591: fix de cookies duplicadas en core — integrado en fork@937f0794 a futuro; vendored manda Cookie como header plano, no usa el interceptor (no requiere jar nuevo)
+6f238dc9f7  # NovelCool #19861: fix de selectores HTML — N/A, el vendored usa la API JSON movil; getMangaByUrl + deeplink ya existian como superset
+bb7d7bb7c9  # Ikigai #20089: adult-default ya always-on via marker-header (mejor para dominios rotados); el search upstream necesita WebView JS — imposible en el host, el vendored lo documenta
