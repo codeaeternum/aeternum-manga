@@ -1,38 +1,38 @@
 {
   "all/novelcool": {
-    "hash": "ea83621685f8e91e1baa8add2792b3283d573142d843b61a75fdea36aa527165",
-    "versionCode": 8
-  },
-  "all/webtoons": {
-    "hash": "be7a62e58ffd54cb20aebb3408c715f08b8db86449702e0e73c213bad10bad8e",
+    "hash": "4dbbc9f88843a38114748f18209e75c650fa07344e49ae6d54c4a15b62d05874",
     "versionCode": 10
   },
-  "es/hentaimode": {
-    "hash": "61bea362684e6f178c88f4ecc025c878c6c6b28f242df7ee17f6d08921aeeb14",
-    "versionCode": 8
-  },
-  "es/ikigaimangas": {
-    "hash": "3f7e039c602aef72f9f4411fe222969ae0ce0c54dda8d83461e42233f0358879",
-    "versionCode": 49
-  },
-  "es/lectortmoo": {
-    "hash": "f4bf795d139b7187b639fc35a70753b303483aa7e186d7d2453e1d64fb3f89d8",
+  "all/webtoons": {
+    "hash": "d884be3458d099b2fb7005d9545e86326ce838f005dcb4dc7350cf550d6bea7f",
     "versionCode": 12
   },
+  "es/hentaimode": {
+    "hash": "1164ee5b5c25d9b810c88efd72f34605b83238469888412b5df4a3325e90fe15",
+    "versionCode": 10
+  },
+  "es/ikigaimangas": {
+    "hash": "43a138f5d93e8ceb7d6a3de8fe04ed8e252afcfee4a9cdd50695dcdefbf26a67",
+    "versionCode": 51
+  },
+  "es/lectortmoo": {
+    "hash": "9811c836cd2bdb00c151df096b80fbe406a663aa53c477cf85b792f190b1d7ba",
+    "versionCode": 14
+  },
   "es/leercapitulo": {
-    "hash": "73e4f6abaed7ae2e2d1f98e6f737d7c50793a4268a82942522df5d4ad1660f5e",
-    "versionCode": 8
+    "hash": "28b35125f1bf8c04da9830eb4fed5dbc10800514ab390dda616746a21289e0b7",
+    "versionCode": 10
   },
   "es/manhwaweb": {
-    "hash": "227ea687bdd109914212c48f03278ac985c0e1518178f0f4532c807c328f78ad",
-    "versionCode": 22
+    "hash": "f112736db66db345b43bc6eea682d0d28f8ed37351131ce439aab7ea815bd506",
+    "versionCode": 24
   },
   "all/mangaplus": {
     "hash": "0515d9839ecb4638a35b8f955b76254f85cbc3eb15d55ba82901ecda2c90eda3",
     "versionCode": 1
   },
   "es/rncalation": {
-    "hash": "799e8705301107e57a8cb37102181499f3c15283ab6b52fa3bd6fa497938dc37",
-    "versionCode": 2
+    "hash": "084dfdeeb2d3b5dc3274edd0555e42953818ca6863a17bdd4aee06acd8abfa10",
+    "versionCode": 4
   }
 }

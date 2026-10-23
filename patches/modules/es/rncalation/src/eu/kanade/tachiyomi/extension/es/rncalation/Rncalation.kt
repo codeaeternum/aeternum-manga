@@ -51,12 +51,15 @@ abstract class Rncalation : KeiSource(), ConfigurableSource {
         }.also(screen::addPreference)
     }
 
+    private fun sessionCookie(): String? = preferences.getString(PREF_SESSION_COOKIE, "").orEmpty()
+        .trim().removePrefix("Cookie:").removePrefix("cookie:").trim()
+        .ifEmpty { null }
+
     override fun OkHttpClient.Builder.configureClient() = rateLimit(2, 2.seconds) { it.host == baseUrl.toHttpUrl().host }
         .addInterceptor { chain ->
             val request = chain.request()
-            val cookie = preferences.getString(PREF_SESSION_COOKIE, "").orEmpty()
-                .trim().removePrefix("Cookie:").removePrefix("cookie:").trim()
-            if (cookie.isEmpty() || request.url.host != baseUrl.toHttpUrl().host) {
+            val cookie = sessionCookie()
+            if (cookie == null || request.url.host != baseUrl.toHttpUrl().host) {
                 chain.proceed(request)
             } else {
                 val merged = request.header("Cookie")?.let { "$it; $cookie" } ?: cookie
@@ -186,6 +189,19 @@ abstract class Rncalation : KeiSource(), ConfigurableSource {
             result += batch
             if (batch.isEmpty() || page >= totalPages) break
             page++
+        }
+        // A configured session cookie should unlock entitled chapters; if locked
+        // rows still appear, probe /user/profile once — an anonymous view
+        // (login redirect or login form in the body) means the cookie expired,
+        // which is reported instead of silent locks.
+        if (sessionCookie() != null && result.any { it.url == manga.url }) {
+            val expired = client.get("$baseUrl/user/profile").use { probe ->
+                probe.request.url.encodedPath.startsWith("/auth/login") ||
+                    probe.asJsoup().selectFirst("form[action*='login'], a[href^='/auth/login']") != null
+            }
+            if (expired) {
+                throw Exception("Sesión de RNCALATION expirada — renueva la cookie en los ajustes de la fuente")
+            }
         }
         return result
     }
