@@ -46,6 +46,11 @@ fi
 # LeerCapitulo
 check "LeerCapitulo"      "https://www.leercapitulo.co/"                 200 'lc-'
 
+# Rncalation: las páginas devuelven el gate mv_ck/CF a curl; /sitemap.xml y
+# /api/* no están gated — sitemap prueba dominio+origen, el API la data real.
+check "Rncalation"        "https://rncalation.online/sitemap.xml"              200 'rncalation.online/comics/'
+check "Rncalation API"    "https://rncalation.online/api/chapters/recent?offset=0&limit=10" 200 '/leer/'
+
 # HentaiMode
 check "HentaiMode"        "https://hentaimode.com/"                      200 'book-list'
 
@@ -85,6 +90,16 @@ else
   [[ "$code" == "200" ]] || FAILURES+=("LeerCapitulo CDN: HTTP $code — $LC_IMG")
 fi
 img_check "HentaiMode img"    "https://hentaimode.com/"                     ""                            'https://[a-z0-9.-]*kmcdn\.top[^"]+'
+
+# Rncalation: covers son rutas relativas /uploads/covers/... en el fragmento API
+RN_IMG=$(curl -s --max-time 20 -A "$UA" "https://rncalation.online/api/chapters/recent?offset=0&limit=10" \
+  | grep -oE 'src="/uploads/covers/[^"]+\.(jpg|jpeg|png|webp)[^"]*"' | head -1 | cut -d'"' -f2)
+if [[ -z "$RN_IMG" ]]; then
+  FAILURES+=("Rncalation img: no se extrajo URL")
+else
+  code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 -A "$UA" "https://rncalation.online$RN_IMG")
+  [[ "$code" == "200" ]] || FAILURES+=("Rncalation CDN: HTTP $code — $RN_IMG")
+fi
 img_check "Webtoons img"      "https://www.webtoons.com/es/ranking/trending" "https://www.webtoons.com/"  'https://webtoon-phinf\.pstatic\.net[^"]+'
 
 # NovelCool: el listado es POST con credenciales de la app
@@ -100,7 +115,7 @@ else
 fi
 
 if [[ ${#FAILURES[@]} -eq 0 ]]; then
-  echo "OK — las 8 fuentes responden"
+  echo "OK — las 9 fuentes responden"
   exit 0
 fi
 printf '%s\n' "FALLOS (${#FAILURES[@]}):" "${FAILURES[@]}"

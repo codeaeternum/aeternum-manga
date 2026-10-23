@@ -38,6 +38,7 @@ MODULES=(
   es:ikigaimangas
   es:leercapitulo
   es:lectortmoo
+  es:rncalation
   all:novelcool
   all:webtoons
   all:mangaplus

@@ -36,6 +36,10 @@ echo
 # Módulos publicados (los que rebuild.sh compila -> aeternum-manga/jar)
 MODULES=(
     es:manhwaweb es:hentaimode es:ikigaimangas es:leercapitulo es:lectortmoo
+    es:rncalation
+    # upstream publica Rncalation como es:nartag (mismo sitio, package legacy):
+    # es:rncalation no existe allí, así que los cambios a portar salen en nartag.
+    es:nartag
     all:mangaplus all:novelcool all:webtoons
 )
 

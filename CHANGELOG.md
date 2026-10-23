@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-22
+
+- NovelCool 1.6.5 -> 1.6.7
+- Webtoons.com 1.6.7 -> 1.6.9
+- HentaiMode 1.6.5 -> 1.6.7
+- Ikigai Mangas 1.6.46 -> 1.6.48
+- LectorTMOo 1.6.9 -> 1.6.11
+- LeerCapitulo 1.6.5 -> 1.6.7
+- ManhwaWeb 1.6.19 -> 1.6.21
+- Rncalation (nuevo) -> 1.6.1
+
 ## 2026-10-19
 
 - NovelCool 1.6.4 -> 1.6.5
