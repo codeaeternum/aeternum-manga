@@ -1,5 +1,8 @@
 package eu.kanade.tachiyomi.extension.es.rncalation
 
+import androidx.preference.EditTextPreference
+import androidx.preference.PreferenceScreen
+import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
@@ -12,6 +15,7 @@ import keiyoushi.network.get
 import keiyoushi.network.rateLimit
 import keiyoushi.source.KeiSource
 import keiyoushi.utils.asJsoup
+import keiyoushi.utils.getPreferencesLazy
 import keiyoushi.utils.tryParse
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -29,13 +33,36 @@ import kotlin.time.Instant
 // tu navegador…", mv-verifying) that sets the cookie and reloads. The
 // interceptor below detects that stub and retries once with the cookie.
 //
-// Some chapters are paid/early-access (coins, subscription, ad-unlock). The
-// extension never logs in: the user signs in through the WebView (Google OAuth)
-// and the shared cookies make entitled chapters appear as normal /leer/ links.
+// Some chapters are paid/early-access (coins, subscription, ad-unlock). Two
+// ways to unlock them without shipping credentials in the jar: sign in through
+// the WebView (Google OAuth, shared cookie jar), or paste the session Cookie
+// header in the source settings — the value lives on-device only.
 @Source
-abstract class Rncalation : KeiSource() {
+abstract class Rncalation : KeiSource(), ConfigurableSource {
+
+    private val preferences by getPreferencesLazy()
+
+    override fun setupPreferenceScreen(screen: PreferenceScreen) {
+        EditTextPreference(screen.context).apply {
+            key = PREF_SESSION_COOKIE
+            title = "Cookie de sesión"
+            summary = "Para capítulos con 🔒: copia el header Cookie de rncalation.online desde tu navegador con sesión iniciada."
+            setDefaultValue("")
+        }.also(screen::addPreference)
+    }
 
     override fun OkHttpClient.Builder.configureClient() = rateLimit(2, 2.seconds) { it.host == baseUrl.toHttpUrl().host }
+        .addInterceptor { chain ->
+            val request = chain.request()
+            val cookie = preferences.getString(PREF_SESSION_COOKIE, "").orEmpty()
+                .trim().removePrefix("Cookie:").removePrefix("cookie:").trim()
+            if (cookie.isEmpty() || request.url.host != baseUrl.toHttpUrl().host) {
+                chain.proceed(request)
+            } else {
+                val merged = request.header("Cookie")?.let { "$it; $cookie" } ?: cookie
+                chain.proceed(request.newBuilder().header("Cookie", merged).build())
+            }
+        }
         .addInterceptor { chain ->
             val response = chain.proceed(chain.request())
             if (
@@ -201,5 +228,9 @@ abstract class Rncalation : KeiSource() {
         "en pausa", "hiatus" -> SManga.ON_HIATUS
         "cancelado", "cancelled" -> SManga.CANCELLED
         else -> SManga.UNKNOWN
+    }
+
+    companion object {
+        private const val PREF_SESSION_COOKIE = "session_cookie"
     }
 }
