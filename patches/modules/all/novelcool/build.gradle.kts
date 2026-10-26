@@ -6,7 +6,7 @@ plugins {
 
 keiyoushi {
     name = "NovelCool"
-    versionCode = 10
+    versionCode = 11
     contentWarning = ContentWarning.MIXED
     libVersion = "1.6"
 

@@ -1,38 +1,38 @@
 {
   "all/novelcool": {
-    "hash": "4dbbc9f88843a38114748f18209e75c650fa07344e49ae6d54c4a15b62d05874",
-    "versionCode": 10
+    "hash": "a932467b771f87da3bdd6e614aee7fd4805d3e293a3e53ffbe7ad51dd7f96da8",
+    "versionCode": 11
   },
   "all/webtoons": {
-    "hash": "d884be3458d099b2fb7005d9545e86326ce838f005dcb4dc7350cf550d6bea7f",
-    "versionCode": 12
+    "hash": "08f3222181ea83b3f3c72d0610b80a826d94c8625b8c47c72b56d29b85fdaf46",
+    "versionCode": 13
   },
   "es/hentaimode": {
-    "hash": "1164ee5b5c25d9b810c88efd72f34605b83238469888412b5df4a3325e90fe15",
-    "versionCode": 10
+    "hash": "45cf05e2db62b72e4add8cf470a89950d7e0ece3a17e12cce9ccf4228e1b4900",
+    "versionCode": 11
   },
   "es/ikigaimangas": {
-    "hash": "43a138f5d93e8ceb7d6a3de8fe04ed8e252afcfee4a9cdd50695dcdefbf26a67",
-    "versionCode": 51
+    "hash": "af3506315b25ac7ef7b46b062505950a3b153772d762a803923e44e9b21c435d",
+    "versionCode": 52
   },
   "es/lectortmoo": {
-    "hash": "9811c836cd2bdb00c151df096b80fbe406a663aa53c477cf85b792f190b1d7ba",
-    "versionCode": 14
+    "hash": "021630bbc62c5ef593fa0d39d17c94b8abffc2ec6b4a8d00ecf1078400039799",
+    "versionCode": 15
   },
   "es/leercapitulo": {
-    "hash": "28b35125f1bf8c04da9830eb4fed5dbc10800514ab390dda616746a21289e0b7",
-    "versionCode": 10
+    "hash": "98a7dd0714483d512dcb6bd43d2887cebd3a03cf6aff0c72e2f35c131837515e",
+    "versionCode": 11
   },
   "es/manhwaweb": {
-    "hash": "f112736db66db345b43bc6eea682d0d28f8ed37351131ce439aab7ea815bd506",
-    "versionCode": 24
+    "hash": "50c98b1484d275ed86857948f1623a8b951a407c2a908771de920910efdb34a7",
+    "versionCode": 25
   },
   "all/mangaplus": {
     "hash": "0515d9839ecb4638a35b8f955b76254f85cbc3eb15d55ba82901ecda2c90eda3",
     "versionCode": 1
   },
   "es/rncalation": {
-    "hash": "084dfdeeb2d3b5dc3274edd0555e42953818ca6863a17bdd4aee06acd8abfa10",
-    "versionCode": 4
+    "hash": "faa41ab0b0b5b03964a3d6e043e2f4e7a8b78de7686ae356e6d0d7a20b7d3fbd",
+    "versionCode": 5
   }
 }
