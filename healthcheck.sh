@@ -8,9 +8,15 @@ FAILURES=()
 
 check() { # name, url, expected_code, [grep-pattern]
   local name="$1" url="$2" want="$3" pat="${4:-}"
-  local code body
-  body=$(curl -sL --max-time 20 -A "$UA" -w '\n%{http_code}' "$url") || body=$'\n000'
-  code="${body##*$'\n'}"
+  local code body try
+  # Ráfagas de Cloudflare/rate-limit devuelven 403 intermitentes — un
+  # reintento corto evita falsos positivos antes de escalar a issue.
+  for try in 1 2; do
+    body=$(curl -sL --max-time 20 -A "$UA" -w '\n%{http_code}' "$url") || body=$'\n000'
+    code="${body##*$'\n'}"
+    [[ "$code" == "$want" || "$code" != "403" && "$code" != "000" && "$code" != "429" && "$code" != "503" ]] && break
+    sleep 4
+  done
   if [[ "$code" != "$want" ]]; then
     FAILURES+=("$name: HTTP $code (esperado $want) — $url")
     return

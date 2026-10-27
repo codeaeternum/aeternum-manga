@@ -27,7 +27,7 @@ git fetch -q "$UPSTREAM_REMOTE" main || { echo "ERROR: fetch falló (¿sin red?)
 # tienen y nosotros no". Los commits-frontera del graft (sin padre en el
 # object store) aparecen como si tocaran TODOS los archivos — hay que
 # excluirlos o ensucian cada módulo.
-BOUNDARY=$(git rev-list --max-parents=0 --abbrev-commit "$UPSTREAM_REF" | tr '\n' ' ')
+BOUNDARY=$(git rev-list --max-parents=0 "$UPSTREAM_REF" | cut -c1-8 | tr '\n' ' ')
 
 echo "HEAD del fork:   $(git log --oneline -1 HEAD | cut -c1-70)"
 echo "$UPSTREAM_REF: $(git log --oneline -1 "$UPSTREAM_REF" | cut -c1-70)"
@@ -47,13 +47,15 @@ MODULES=(
 # propio, refactor sin efecto, etc.) — un SHA prefijo + comentario por línea.
 SKIP_FILE="$HERE/.upstream-skip"
 SKIP=""
-[[ -f "$SKIP_FILE" ]] && SKIP=$(grep -vE '^\s*(#|$)' "$SKIP_FILE" | awk '{print $1}')
+# --oneline abrevia a ~9 chars; normalizar ambos lados a 8 para que el
+# filtro de skips matchee siempre.
+[[ -f "$SKIP_FILE" ]] && SKIP=$(grep -vE '^\s*(#|$)' "$SKIP_FILE" | awk '{print $1}' | cut -c1-8)
 
 TOTAL=0
 for rel in "${MODULES[@]}"; do
     dir="src/${rel/://}"
     # Commits upstream que tocan el módulo, menos graft-boundary y skips
-    lines=$(git log --oneline HEAD.."$UPSTREAM_REF" -- "$dir" \
+    lines=$(git log --abbrev=8 --oneline HEAD.."$UPSTREAM_REF" -- "$dir" \
         | { grep -vF -f <(printf '%s\n' $BOUNDARY) || true; } \
         | { [[ -n "$SKIP" ]] && grep -vF -f <(printf '%s\n' $SKIP) || cat; })
     count=0
