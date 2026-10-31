@@ -30,7 +30,12 @@ def module_hash(module_dir: Path) -> str:
     for f in sorted(module_dir.rglob("*")):
         if f.is_file() and f.suffix in INCLUDE_SUFFIXES:
             h.update(f.relative_to(module_dir).as_posix().encode())
-            h.update(f.read_bytes())
+            data = f.read_bytes()
+            # El versionCode lo escribe el propio bump — normalizarlo fuera
+            # del hash o cada bump invalida su propio registro (bucle infinito)
+            if f.name == "build.gradle.kts":
+                data = VC_RE.sub("versionCode = 0", data.decode("utf-8")).encode("utf-8")
+            h.update(data)
     return h.hexdigest()
 
 

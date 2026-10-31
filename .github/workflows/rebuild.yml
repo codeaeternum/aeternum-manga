@@ -69,7 +69,8 @@ jobs:
             :src:es:ikigaimangas:assembleRelease \
             :src:es:lectortmoo:assembleRelease \
             :src:es:leercapitulo:assembleRelease \
-            :src:es:manhwaweb:assembleRelease
+            :src:es:manhwaweb:assembleRelease \
+            :src:es:rncalation:assembleRelease
 
       - name: Regenerate repo index
         working-directory: aeternum-manga

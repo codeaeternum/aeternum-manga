@@ -1,38 +1,38 @@
 {
   "all/novelcool": {
-    "hash": "a932467b771f87da3bdd6e614aee7fd4805d3e293a3e53ffbe7ad51dd7f96da8",
-    "versionCode": 11
+    "hash": "537961da6f403ad7d2bdbf8146f4f0fff21a557b4d404d23e6e666dce01b2a9c",
+    "versionCode": 12
   },
   "all/webtoons": {
-    "hash": "08f3222181ea83b3f3c72d0610b80a826d94c8625b8c47c72b56d29b85fdaf46",
-    "versionCode": 13
+    "hash": "765d13ae181650c55f226c9b22a1eb627563467b75eca91ebb542c0395ae1f62",
+    "versionCode": 14
   },
   "es/hentaimode": {
-    "hash": "45cf05e2db62b72e4add8cf470a89950d7e0ece3a17e12cce9ccf4228e1b4900",
-    "versionCode": 11
+    "hash": "cf53aa5122b1490aa441f89421d635d52907de82292610068698514f93ff937e",
+    "versionCode": 12
   },
   "es/ikigaimangas": {
-    "hash": "af3506315b25ac7ef7b46b062505950a3b153772d762a803923e44e9b21c435d",
-    "versionCode": 52
+    "hash": "241d05383373f11a95ceb70f9ea8e7c4c55995809ca42464f3096dfc9d9d27e9",
+    "versionCode": 53
   },
   "es/lectortmoo": {
-    "hash": "021630bbc62c5ef593fa0d39d17c94b8abffc2ec6b4a8d00ecf1078400039799",
-    "versionCode": 15
+    "hash": "60159469570b765baaaa33a1835ccabc76c7bf3e43b597351952d923da681993",
+    "versionCode": 16
   },
   "es/leercapitulo": {
-    "hash": "98a7dd0714483d512dcb6bd43d2887cebd3a03cf6aff0c72e2f35c131837515e",
-    "versionCode": 11
+    "hash": "1da18d44985c26f30be3d4edf8e801dd5674a57a3985c10133de85cadcc0d0b5",
+    "versionCode": 12
   },
   "es/manhwaweb": {
-    "hash": "50c98b1484d275ed86857948f1623a8b951a407c2a908771de920910efdb34a7",
-    "versionCode": 25
+    "hash": "110bdb683175cd468ed6b38999f4ee0dea2a21817a0e0661dbc1e03fcc79c7c7",
+    "versionCode": 26
   },
   "all/mangaplus": {
-    "hash": "0515d9839ecb4638a35b8f955b76254f85cbc3eb15d55ba82901ecda2c90eda3",
+    "hash": "fcfdf4270aa5eff59543e3fc2805584916a4ea89dd39ecbbf9f8309edd8acbf5",
     "versionCode": 1
   },
   "es/rncalation": {
-    "hash": "faa41ab0b0b5b03964a3d6e043e2f4e7a8b78de7686ae356e6d0d7a20b7d3fbd",
-    "versionCode": 5
+    "hash": "5965e98eda253645dd8239596c9306d692d9040104c89c50294a755b9208b4da",
+    "versionCode": 6
   }
 }
