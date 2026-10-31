@@ -99,6 +99,17 @@
       "nsfw": true,
       "baseUrl": "https://hentaimode.com",
       "description": "Port Legere de HentaiMode (scraper hentaimode.com)"
+    },
+    {
+      "id": "eu.kanade.tachiyomi.extension.es.dragontranslationorg",
+      "name": "DragonTranslation",
+      "lang": "es",
+      "version": "1.0.0",
+      "url": "lext/dragontranslation.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.es.dragontranslationorg.png",
+      "nsfw": true,
+      "baseUrl": "https://dragontranslation.org",
+      "description": "Port Legere de dragontranslation.org (Madara child-mk, ES). Recicla el catálogo del difunto .net — mismos slugs, re-linkea las series ghost .tmb."
     }
   ]
 }
