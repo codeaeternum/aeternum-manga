@@ -1,0 +1,82 @@
+{
+  "repo": "Aeternum",
+  "extensions": [
+    {
+      "id": "eu.kanade.tachiyomi.extension.es.manhwaweb",
+      "name": "ManhwaWeb",
+      "lang": "es",
+      "version": "1.6.26",
+      "url": "lext/manhwaweb.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.es.manhwaweb.png",
+      "nsfw": true,
+      "baseUrl": "https://manhwaweb.com",
+      "description": "Port Legere de ManhwaWeb (API api.manhwaweb.com)"
+    },
+    {
+      "id": "eu.kanade.tachiyomi.extension.es.leercapitulo",
+      "name": "LeerCapitulo",
+      "lang": "es",
+      "version": "1.6.12",
+      "url": "lext/leercapitulo.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.es.leercapitulo.png",
+      "nsfw": false,
+      "baseUrl": "https://www.leercapitulo.co",
+      "description": "Port Legere de LeerCapitulo (scraper leercapitulo.co)"
+    },
+    {
+      "id": "eu.kanade.tachiyomi.extension.es.rncalation",
+      "name": "Rncalation",
+      "lang": "es",
+      "version": "1.6.7",
+      "url": "lext/rncalation.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.es.rncalation.png",
+      "nsfw": true,
+      "baseUrl": "https://rncalation.online",
+      "description": "Port Legere de Rncalation (rncalation.online)"
+    },
+    {
+      "id": "eu.kanade.tachiyomi.extension.es.lectortmoo",
+      "name": "LectorTMOo",
+      "lang": "es",
+      "version": "1.6.16",
+      "url": "lext/lectortmoo.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.es.lectortmoo.png",
+      "nsfw": true,
+      "baseUrl": "https://lectortmo.online",
+      "description": "Port Legere de LectorTMOo (API lectortmo.online, espejo TuMangaHentai)"
+    },
+    {
+      "id": "eu.kanade.tachiyomi.extension.all.novelcool",
+      "name": "NovelCool",
+      "lang": "es",
+      "version": "1.6.12",
+      "url": "lext/novelcool.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.all.novelcool.png",
+      "nsfw": true,
+      "baseUrl": "https://es.novelcool.com",
+      "description": "Port Legere de NovelCool (API + scraper es.novelcool.com)"
+    },
+    {
+      "id": "eu.kanade.tachiyomi.extension.es.ikigaimangas",
+      "name": "Ikigai Mangas",
+      "lang": "es",
+      "version": "1.6.53",
+      "url": "lext/ikigaimangas.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.es.ikigaimangas.png",
+      "nsfw": true,
+      "baseUrl": "https://ikigaimangas.com",
+      "description": "Port Legere de Ikigai Mangas (descubrimiento de dominio espejo)"
+    },
+    {
+      "id": "eu.kanade.tachiyomi.extension.es.hentaimode",
+      "name": "HentaiMode",
+      "lang": "es",
+      "version": "1.6.12",
+      "url": "lext/hentaimode.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.es.hentaimode.png",
+      "nsfw": true,
+      "baseUrl": "https://hentaimode.com",
+      "description": "Port Legere de HentaiMode (scraper hentaimode.com)"
+    }
+  ]
+}
