@@ -2,6 +2,28 @@
   "repo": "Aeternum",
   "extensions": [
     {
+      "id": "eu.kanade.tachiyomi.extension.all.webtoons",
+      "name": "Webtoons.com",
+      "lang": "en",
+      "version": "1.6.14",
+      "url": "lext/webtoons.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.all.webtoons.png",
+      "nsfw": false,
+      "baseUrl": "https://www.webtoons.com",
+      "description": "Port Legere de Webtoons.com (scraper webtoons.com + API móvil de episodios)"
+    },
+    {
+      "id": "eu.kanade.tachiyomi.extension.all.mangaplus",
+      "name": "MANGA Plus by SHUEISHA",
+      "lang": "all",
+      "version": "1.6.1",
+      "url": "lext/mangaplus.lext",
+      "icon": "icon/eu.kanade.tachiyomi.extension.all.mangaplus.png",
+      "nsfw": false,
+      "baseUrl": "https://mangaplus.shueisha.co.jp",
+      "description": "Port Legere de MANGA Plus (API protobuf jumpg-webapi + XOR en imágenes)"
+    },
+    {
       "id": "eu.kanade.tachiyomi.extension.es.manhwaweb",
       "name": "ManhwaWeb",
       "lang": "es",
