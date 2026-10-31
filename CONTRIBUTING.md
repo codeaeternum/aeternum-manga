@@ -62,9 +62,22 @@ si la fuente es nueva.
 
 ## Flujo
 
+**Fuente canónica: `patches/modules/`** (este repo). El árbol
+`../extensions-source` (fork `codeaeternum/extensions-source`) es solo un
+workspace de desarrollo/comparación con upstream — `rebuild.sh` lo
+sobrescribe con el vendored antes de compilar, así que difiere de
+`patches/modules/` cada vez que el CI hace auto-bump. Al editar código:
+
+- Opción A (recomendada): edita directo en `patches/modules/<lang>/<ext>/`
+  y corre `./rebuild.sh` — el árbol se resincroniza solo.
+- Opción B: edita en `extensions-source/src/`, luego copia el módulo al
+  vendored (`rsync -a --exclude build --exclude .gradle`) — el vendored
+  es lo que publica el CI.
+
 ```bash
-./rebuild.sh          # bump → sync módulos → gradle assembleRelease → índices
+./rebuild.sh          # healthcheck gate → bump → sync módulos → gradle → índices
 ./healthcheck.sh      # ping endpoints + una imagen CDN real por fuente
+./check-upstream.sh   # commits de keiyoushi pendientes por módulo
 git add -A && git commit && git push
 ```
 
