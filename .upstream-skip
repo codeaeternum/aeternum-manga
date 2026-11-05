@@ -7,3 +7,4 @@ c692896d04  # ManhwaWeb #19959: api.manhwaweb.com + autor/artista — ya cubiert
 58bceb5eae  # Webtoons #19591: fix de cookies duplicadas en core — integrado en fork@937f0794 a futuro; vendored manda Cookie como header plano, no usa el interceptor (no requiere jar nuevo)
 6f238dc9f7  # NovelCool #19861: fix de selectores HTML — N/A, el vendored usa la API JSON movil; getMangaByUrl + deeplink ya existian como superset
 bb7d7bb7c9  # Ikigai #20089: adult-default ya always-on via marker-header (mejor para dominios rotados); el search upstream necesita WebView JS — imposible en el host, el vendored lo documenta
+a5e7043735  # Ikigai #20480: elimina su mecanismo SharedPreferences de dominio — el vendored ya rota dominio en memoria por request (mutex); el search sigue siendo WebView-only en upstream

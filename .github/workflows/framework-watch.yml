@@ -39,7 +39,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          EXISTING=$(gh issue list --state open --search "in:title \"Framework upstream\"" --json number --jq '.[0].number' || true)
+          EXISTING=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"Framework upstream\"" --json number --jq '.[0].number' || true)
           BODY="El framework de keiyoushi (commit pin \`$PIN\`) diverge de \`main\` en archivos de build:
 
           \`\`\`
@@ -48,7 +48,7 @@ jobs:
 
           Revisar si conviene actualizar el pin en \`.github/workflows/rebuild.yml\`."
           if [ -n "$EXISTING" ]; then
-            gh issue comment "$EXISTING" --body "$BODY"
+            gh issue comment -R "${{ github.repository }}" "$EXISTING" --body "$BODY"
           else
-            gh issue create --title "Framework upstream diverge del pin" --body "$BODY"
+            gh issue create -R "${{ github.repository }}" --title "Framework upstream diverge del pin" --body "$BODY"
           fi
