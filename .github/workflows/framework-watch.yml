@@ -10,7 +10,7 @@ permissions:
   issues: write
 
 env:
-  PIN: 8c3323cca3615b00edb7a5c79603ee434b2864f8
+  PIN: de743aed846da53e00c45ab26ee0e77f7bb4355b
 
 jobs:
   watch:

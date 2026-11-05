@@ -1,38 +1,38 @@
 {
   "all/novelcool": {
-    "hash": "537961da6f403ad7d2bdbf8146f4f0fff21a557b4d404d23e6e666dce01b2a9c",
-    "versionCode": 12
+    "hash": "6f35b40a46b9c575a319ea365c8ea91a7af3ba55adf7e4b517f002e90c561c15",
+    "versionCode": 13
   },
   "all/webtoons": {
-    "hash": "765d13ae181650c55f226c9b22a1eb627563467b75eca91ebb542c0395ae1f62",
-    "versionCode": 14
+    "hash": "88c76f88c44f982a1b2f54bf5df7aa6083d33c91759912153237b082babfacee",
+    "versionCode": 15
   },
   "es/hentaimode": {
-    "hash": "cf53aa5122b1490aa441f89421d635d52907de82292610068698514f93ff937e",
-    "versionCode": 12
+    "hash": "8d36274db118b0b53e551f514fed365459c8173a093432883d40557128a720f2",
+    "versionCode": 13
   },
   "es/ikigaimangas": {
-    "hash": "241d05383373f11a95ceb70f9ea8e7c4c55995809ca42464f3096dfc9d9d27e9",
-    "versionCode": 53
+    "hash": "618f3581cd97b2baf0f62a75f7340ab4c307232d7b80d0ad378eb5e96cc3a3c4",
+    "versionCode": 54
   },
   "es/lectortmoo": {
-    "hash": "60159469570b765baaaa33a1835ccabc76c7bf3e43b597351952d923da681993",
-    "versionCode": 16
+    "hash": "9edfdaac3a8b6184482990ad229bf7cfde507b9fa2e330f6fcbb96d2f775e52a",
+    "versionCode": 17
   },
   "es/leercapitulo": {
-    "hash": "1da18d44985c26f30be3d4edf8e801dd5674a57a3985c10133de85cadcc0d0b5",
-    "versionCode": 12
+    "hash": "1b95d4a79f9f5833d2d7e728717c608ce1b870e4ee87256e85f2ce49d20d24dc",
+    "versionCode": 13
   },
   "es/manhwaweb": {
-    "hash": "110bdb683175cd468ed6b38999f4ee0dea2a21817a0e0661dbc1e03fcc79c7c7",
-    "versionCode": 26
+    "hash": "1be02e5a618cda07a07463578fef594d00696410a29262475bd97be97c9c79d7",
+    "versionCode": 27
   },
   "all/mangaplus": {
-    "hash": "fcfdf4270aa5eff59543e3fc2805584916a4ea89dd39ecbbf9f8309edd8acbf5",
-    "versionCode": 1
+    "hash": "bd38417ccf2d0cc286c0e16683abd65fb04177b8452c13d46a18e7e98053b5a2",
+    "versionCode": 2
   },
   "es/rncalation": {
-    "hash": "5173907983503e5bf587d1f7e6b1782775de14e95d18c02d9201880f4c8318e1",
-    "versionCode": 7
+    "hash": "e441d807c49268d369a54a31e6a13eca97b97a7898394b2a5266c673d230f911",
+    "versionCode": 8
   }
 }

@@ -23,7 +23,7 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/keiyoushi/extensions-source extensions-source
           cd extensions-source
-          git fetch --depth 1 origin 8c3323cca3615b00edb7a5c79603ee434b2864f8
+          git fetch --depth 1 origin de743aed846da53e00c45ab26ee0e77f7bb4355b
           git checkout FETCH_HEAD
 
       - name: Auto-bump changed modules

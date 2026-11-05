@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-04
+
+- MANGA Plus by SHUEISHA 1.6.1 -> 1.6.2
+- NovelCool 1.6.12 -> 1.6.13
+- Webtoons.com 1.6.14 -> 1.6.15
+- HentaiMode 1.6.12 -> 1.6.13
+- Ikigai Mangas 1.6.53 -> 1.6.54
+- LectorTMOo 1.6.16 -> 1.6.17
+- LeerCapitulo 1.6.12 -> 1.6.13
+- ManhwaWeb 1.6.26 -> 1.6.27
+- Rncalation 1.6.7 -> 1.6.8
+
 ## 2026-10-31
 
 - Rncalation 1.6.6 -> 1.6.7
