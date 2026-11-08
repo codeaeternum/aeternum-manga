@@ -54,15 +54,25 @@ jobs:
       - name: Restore signing key
         run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > extensions-source/signingkey.jks
 
+      - name: Harden gradle wrapper download
+        working-directory: extensions-source
+        # El wrapper descarga la distro en runner frío; upstream fija
+        # networkTimeout=10s y retries=0 — una caída lenta de
+        # services.gradle.org mata el build. El wrapper solo lee estos
+        # valores de este archivo (no de -D ni env).
+        run: |
+          sed -i \
+            -e 's/^networkTimeout=.*/networkTimeout=120000/' \
+            -e 's/^retries=.*/retries=3/' \
+            -e 's/^retryBackOffMs=.*/retryBackOffMs=2000/' \
+            gradle/wrapper/gradle-wrapper.properties
+
       - name: Build extensions (apk + jar)
         working-directory: extensions-source
         env:
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          # El wrapper descarga la distro en runner frío — el timeout por
-          # defecto (10s) es corto si services.gradle.org va lento.
-          GRADLE_OPTS: "-Dorg.gradle.wrapper.networkTimeout=120000 -Dorg.gradle.wrapper.downloadUrlMigrationTimeout=120000"
         run: |
           ./gradlew \
             :src:all:mangaplus:assembleRelease \
