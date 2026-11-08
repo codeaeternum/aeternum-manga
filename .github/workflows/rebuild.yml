@@ -72,6 +72,10 @@ jobs:
             :src:es:manhwaweb:assembleRelease \
             :src:es:rncalation:assembleRelease
 
+      - name: Verify jars (signature + refs)
+        working-directory: aeternum-manga
+        run: python3 verify-jars.py
+
       - name: Regenerate repo index
         working-directory: aeternum-manga
         run: python3 build-repo.py
