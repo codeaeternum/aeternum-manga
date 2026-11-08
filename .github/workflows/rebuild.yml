@@ -66,6 +66,18 @@ jobs:
             -e 's/^retries=.*/retries=3/' \
             -e 's/^retryBackOffMs=.*/retryBackOffMs=2000/' \
             gradle/wrapper/gradle-wrapper.properties
+          # Pre-sembrar la distro en el path del wrapper
+          # (wrapper/dists/<nombre>/<md5(url)>/): si services.gradle.org
+          # va mal, el zip idéntico vive en github releases (su redirect).
+          URL=$(grep '^distributionUrl=' gradle/wrapper/gradle-wrapper.properties | cut -d= -f2 | sed 's/\\//g')
+          NAME=$(basename "$URL")
+          HASH=$(echo -n "$URL" | md5sum | cut -d' ' -f1)
+          DIST="$HOME/.gradle/wrapper/dists/${NAME%.zip}/$HASH"
+          mkdir -p "$DIST"
+          VER=$(echo "$NAME" | sed -E 's/gradle-(.+)-(bin|all)\.zip/\1/')
+          curl -fL --retry 4 --retry-delay 5 -o "$DIST/$NAME" "$URL" \
+            || curl -fL --retry 4 --retry-delay 5 -o "$DIST/$NAME" \
+                 "https://github.com/gradle/gradle-distributions/releases/download/v$VER/$NAME"
 
       - name: Build extensions (apk + jar)
         working-directory: extensions-source
