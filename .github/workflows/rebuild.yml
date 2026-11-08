@@ -60,6 +60,9 @@ jobs:
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          # El wrapper descarga la distro en runner frío — el timeout por
+          # defecto (10s) es corto si services.gradle.org va lento.
+          GRADLE_OPTS: "-Dorg.gradle.wrapper.networkTimeout=120000 -Dorg.gradle.wrapper.downloadUrlMigrationTimeout=120000"
         run: |
           ./gradlew \
             :src:all:mangaplus:assembleRelease \
