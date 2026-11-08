@@ -106,6 +106,21 @@ else
   code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 -A "$UA" "https://rncalation.online$RN_IMG")
   [[ "$code" == "200" ]] || FAILURES+=("Rncalation CDN: HTTP $code — $RN_IMG")
 fi
+
+# Rncalation gate mv_ck: la extensión depende del flujo stub→cookie→retry.
+# 1ª request espera el stub mv-verifying + Set-Cookie; la 2ª con la cookie
+# debe devolver la página real — si el gate cambia, el interceptor se rompe.
+RN_HEADERS=$(mktemp); RN_STUB=$(curl -s -D "$RN_HEADERS" --max-time 20 -A "$UA" "https://rncalation.online/")
+RN_CK=$(grep -i "set-cookie" "$RN_HEADERS" | grep -oE 'mv_ck=[^;]+' | head -1)
+if [[ -z "$RN_CK" ]] || ! grep -q "mv-verifying" <<< "$RN_STUB"; then
+  FAILURES+=("Rncalation gate: no llegó el stub mv_ck (¿gate desactivado o roto?)")
+else
+  RN_REAL=$(curl -s --max-time 20 -A "$UA" -H "Cookie: $RN_CK" "https://rncalation.online/")
+  if grep -q "mv-verifying" <<< "$RN_REAL" || [[ ${#RN_REAL} -lt 10000 ]]; then
+    FAILURES+=("Rncalation gate: retry con mv_ck no devolvió página real")
+  fi
+fi
+rm -f "$RN_HEADERS"
 img_check "Webtoons img"      "https://www.webtoons.com/es/ranking/trending" "https://www.webtoons.com/"  'https://webtoon-phinf\.pstatic\.net[^"]+'
 
 # NovelCool: el listado es POST con credenciales de la app

@@ -1,0 +1,131 @@
+name: Pin bump candidate (test upstream main)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Mensual: día 2 a las 08:30 UTC (tras framework-watch del día 1)
+    - cron: "30 8 2 * *"
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repo (aeternum-manga)
+        uses: actions/checkout@v4
+        with:
+          path: aeternum-manga
+
+      - name: Clone upstream extensions-source (main, shallow)
+        run: |
+          git clone --depth 1 https://github.com/keiyoushi/extensions-source extensions-source
+          git -C extensions-source rev-parse HEAD > upstream-sha.txt
+
+      - name: Install aeternum modules
+        run: |
+          cd extensions-source
+          for d in ../aeternum-manga/patches/modules/*/*/; do
+            rm -rf "src/${d#../aeternum-manga/patches/modules/}"
+          done
+          cp -R ../aeternum-manga/patches/modules/* src/
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Android SDK platform 37
+        run: |
+          SDKMANAGER="$(ls -d "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -1)"
+          [ -n "$SDKMANAGER" ] || SDKMANAGER="$ANDROID_HOME/tools/bin/sdkmanager"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-37.0"
+
+      - name: Restore signing key
+        run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > extensions-source/signingkey.jks
+
+      - name: Build modules (uno a uno, un fallo no enmascara al resto)
+        working-directory: extensions-source
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          MODULES="all:mangaplus all:novelcool all:webtoons es:hentaimode es:ikigaimangas es:lectortmoo es:leercapitulo es:manhwaweb es:rncalation"
+          mkdir -p "$GITHUB_WORKSPACE/build-logs"
+          : > "$GITHUB_WORKSPACE/build-results.txt"
+          for m in $MODULES; do
+            log="$GITHUB_WORKSPACE/build-logs/$(echo "$m" | tr ':' '-').log"
+            echo "== :src:$m:assembleRelease =="
+            if ./gradlew --console=plain ":src:$m:assembleRelease" > "$log" 2>&1; then
+              echo "$m|PASS" >> "$GITHUB_WORKSPACE/build-results.txt"
+            else
+              echo "$m|FAIL" >> "$GITHUB_WORKSPACE/build-results.txt"
+            fi
+          done
+          cat "$GITHUB_WORKSPACE/build-results.txt"
+
+      - name: Report result (comentar issue de drift o crear uno nuevo)
+        if: always()
+        run: |
+          SHA=$(cat upstream-sha.txt 2>/dev/null || echo "desconocido")
+          FAILS=""
+          {
+            echo "### Pin bump candidate — $(date -u +'%Y-%m-%d %H:%M UTC')"
+            echo
+            echo "Upstream \`main\` probado: \`$SHA\`"
+            echo
+            if [ -s build-results.txt ]; then
+              echo "| Módulo | Resultado |"
+              echo "|---|---|"
+              while IFS='|' read -r mod res; do
+                [ -n "$mod" ] || continue
+                if [ "$res" = "PASS" ]; then
+                  echo "| \`:src:$mod\` | ✅ |"
+                else
+                  echo "| \`:src:$mod\` | ❌ |"
+                  FAILS="$FAILS :src:$mod"
+                fi
+              done < build-results.txt
+            else
+              echo "_Sin resultados: el build no llegó a ejecutarse (fallo en setup previo)._"
+            fi
+            echo
+            if [ ! -s build-results.txt ]; then
+              echo "**Veredicto: build no completado — revisar el run**"
+            elif [ -z "$FAILS" ]; then
+              echo "**Veredicto: Bump looks safe**"
+            else
+              echo "**Veredicto: Bump blocked by:$FAILS**"
+            fi
+            echo
+            if [ -s build-results.txt ]; then
+              while IFS='|' read -r mod res; do
+                [ "$res" = "FAIL" ] || continue
+                echo "<details><summary>\`:src:$mod\` — error tail</summary>"
+                echo
+                echo '```'
+                tail -30 "build-logs/$(echo "$mod" | tr ':' '-').log" 2>/dev/null || echo "(sin log)"
+                echo '```'
+                echo
+                echo "</details>"
+                echo
+              done < build-results.txt
+            fi
+            echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          } > report.md
+
+          EXISTING=$(gh issue list -R "${{ github.repository }}" --state open --search 'in:title "Framework upstream"' --json number --jq '.[0].number' || true)
+          if [ -n "$EXISTING" ]; then
+            gh issue comment -R "${{ github.repository }}" "$EXISTING" --body-file report.md
+          else
+            gh issue create -R "${{ github.repository }}" --title "Pin bump candidate: upstream main" --body-file report.md
+          fi
