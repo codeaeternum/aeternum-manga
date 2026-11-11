@@ -23,7 +23,7 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/keiyoushi/extensions-source extensions-source
           cd extensions-source
-          git fetch --depth 1 origin de743aed846da53e00c45ab26ee0e77f7bb4355b
+          git fetch --depth 1 origin "$(cat ../aeternum-manga/PIN)"
           git checkout FETCH_HEAD
 
       - name: Auto-bump changed modules
@@ -50,6 +50,8 @@ jobs:
           [ -n "$SDKMANAGER" ] || SDKMANAGER="$ANDROID_HOME/tools/bin/sdkmanager"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" "platforms;android-37.0"
+          # Algunas cadenas AGP buscan "android-37" a secas — alias barato.
+          ln -sfn "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
 
       - name: Restore signing key
         run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > extensions-source/signingkey.jks
@@ -70,17 +72,28 @@ jobs:
             -e 's/^retryBackOffMs=.*/retryBackOffMs=2000/' \
             gradle/wrapper/gradle-wrapper.properties
           # Pre-sembrar la distro en el path del wrapper
-          # (wrapper/dists/<nombre>/<md5(url)>/): si services.gradle.org
-          # va mal, el zip idéntico vive en github releases (su redirect).
+          # (wrapper/dists/<nombre>/<md5(url)>/): el wrapper solo usa la
+          # distro si hay directorio descomprimido + marcador <zip>.ok —
+          # un zip suelto se ignora y se vuelve a descargar. Si
+          # services.gradle.org va mal, el zip idéntico vive en github
+          # releases (su redirect). No fatal: si ambos fallan, el
+          # wrapper reintenta con los timeouts de arriba.
           URL=$(grep '^distributionUrl=' gradle/wrapper/gradle-wrapper.properties | cut -d= -f2 | sed 's/\\//g')
           NAME=$(basename "$URL")
           HASH=$(echo -n "$URL" | md5sum | cut -d' ' -f1)
           DIST="$HOME/.gradle/wrapper/dists/${NAME%.zip}/$HASH"
           mkdir -p "$DIST"
           VER=$(echo "$NAME" | sed -E 's/gradle-(.+)-(bin|all)\.zip/\1/')
-          curl -fL --retry 4 --retry-delay 5 -o "$DIST/$NAME" "$URL" \
+          if [ ! -f "$DIST/$NAME.ok" ] && { curl -fL --retry 4 --retry-delay 5 -o "$DIST/$NAME" "$URL" \
             || curl -fL --retry 4 --retry-delay 5 -o "$DIST/$NAME" \
-                 "https://github.com/gradle/gradle-distributions/releases/download/v$VER/$NAME"
+                 "https://github.com/gradle/gradle-distributions/releases/download/v$VER/$NAME"; }; then
+            unzip -q -o "$DIST/$NAME" -d "$DIST" \
+              && touch "$DIST/$NAME.ok" \
+              && rm -f "$DIST/$NAME" \
+              && echo "Distro pre-sembrada en $DIST"
+          else
+            echo "Pre-seed omitido (ya instalada o descarga imposible)"
+          fi
 
       - name: Build extensions (apk + jar)
         working-directory: extensions-source
@@ -114,8 +127,14 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           git add -A
-          if git diff --cached --quiet; then
-            echo "Sin cambios"
+          # Publicar solo si cambia algo visible para el usuario:
+          # versiones o índice. Los binarios de una misma versión
+          # difieren en bytes por timestamps de zip — republicarlos
+          # bajo el mismo versionCode infla el repo y confunde a los
+          # clientes sin aportar nada.
+          if git diff --cached --quiet -- versions.json index.json index.min.json index.pb; then
+            echo "Sin cambios de versión ni índice — no se publica"
+            git reset -q
           else
             git commit -m "Rebuild: upstream sync ($(date -u +%Y-%m-%d))"
             git push

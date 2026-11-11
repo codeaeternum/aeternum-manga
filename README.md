@@ -3,7 +3,7 @@
 [![Extension watch](https://github.com/codeaeternum/aeternum-manga/actions/workflows/extension-watch.yml/badge.svg)](https://github.com/codeaeternum/aeternum-manga/actions/workflows/extension-watch.yml)
 
 Repo personal de extensiones para Tachimanga con **scrapers propios** —
-las 7 extensiones están escritas y mantenidas aquí (en `patches/modules/`),
+las 9 extensiones están escritas y mantenidas aquí (en `patches/modules/`),
 iOS-nativas desde cero. El framework de build (`KeiSource`, extension-lib,
 plugin Gradle) viene de [`keiyoushi/extensions-source`](https://github.com/keiyoushi/extensions-source)
 **congelado en un commit fijo** — solo como toolchain, no como fuente de scrapers.
@@ -47,7 +47,7 @@ Sirve **dos formatos** de índice:
 patches/modules/<lang>/<ext>/   ← código fuente propio de cada extensión
 build-repo.py                   ← genera index.pb + index.min.json + apk/ + jar/
 rebuild.sh                      ← sync módulos → compila → regenera repo
-healthcheck.sh                  ← verifica endpoints de las 8 fuentes
+healthcheck.sh                  ← verifica endpoints de las 9 fuentes
 check-upstream.sh               ← commits de keiyoushi pendientes por módulo
 .github/workflows/
   rebuild.yml                   ← semanal: compila todo desde framework pinned
@@ -74,5 +74,8 @@ en la raíz de `extensions-source` (env: `KEY_STORE_PASSWORD`, `ALIAS`,
   Tachimanga la usa para verificar los `.jar`/`.apk`.
 - Todas las extensiones son iOS/OpenJ9-safe por diseño: cero `android.*`,
   sin `SharedPreferences`/`WebView`/`CookieManager`/prefs screens.
+  Única excepción auditada: `es.rncalation` es `ConfigurableSource`
+  (campo "Cookie de sesión" para capítulos de pago) — `verify-jars.py`
+  tolera sus refs prefs solo en ese módulo (`--strict-prefs` las cuenta).
 - Al cambiar un scraper, sube su `versionCode` en `build.gradle.kts` para que
   la app lo vea como update.

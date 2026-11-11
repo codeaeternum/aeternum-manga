@@ -22,7 +22,10 @@ VC_RE = re.compile(r"versionCode\s*=\s*(\d+)")
 
 # Archivos que no influyen en el bytecode pero forman parte del modulo
 # (el icono si afecta al apk -> incluimos res/ en el hash)
-INCLUDE_SUFFIXES = {".kt", ".kts", ".xml", ".png", ".webp", ".proto"}
+INCLUDE_SUFFIXES = {
+    ".kt", ".kts", ".xml", ".png", ".webp", ".proto",
+    ".pro", ".json", ".properties", ".jar", ".jks", ".ttf", ".otf",
+}
 
 
 def module_hash(module_dir: Path) -> str:
@@ -31,6 +34,10 @@ def module_hash(module_dir: Path) -> str:
         if f.is_file() and f.suffix in INCLUDE_SUFFIXES:
             h.update(f.relative_to(module_dir).as_posix().encode())
             data = f.read_bytes()
+            # Un checkout con autocrlf (Windows) re-escribe los archivos de
+            # texto: normalizar EOL para que el hash sea portable.
+            if f.suffix in {".kt", ".kts", ".xml", ".pro", ".json", ".properties", ".proto"}:
+                data = data.replace(b"\r\n", b"\n")
             # El versionCode lo escribe el propio bump — normalizarlo fuera
             # del hash o cada bump invalida su propio registro (bucle infinito)
             if f.name == "build.gradle.kts":
@@ -40,7 +47,20 @@ def module_hash(module_dir: Path) -> str:
 
 
 def main() -> int:
-    versions = json.loads(VERSIONS_FILE.read_text()) if VERSIONS_FILE.exists() else {}
+    # Un versions.json truncado (pull interrumpido, conflicto) no debe
+    # matar el pipeline entero: resembrar es seguro (provoca un bump de
+    # cortesia, no una corrupcion).
+    try:
+        versions = (
+            json.loads(VERSIONS_FILE.read_text())
+            if VERSIONS_FILE.exists()
+            else {}
+        )
+        if not isinstance(versions, dict):
+            raise ValueError("no es un objeto")
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"!! versions.json invalido ({e}) — resembrando", flush=True)
+        versions = {}
     bumped = []
 
     for gradle in sorted(MODULES_DIR.glob("*/*/build.gradle.kts")):
@@ -56,11 +76,11 @@ def main() -> int:
         digest = module_hash(module_dir)
         record = versions.get(mod)
 
-        if record and record["hash"] == digest:
+        if record and record.get("hash") == digest:
             continue  # sin cambios
 
         # Codigo cambio (o modulo nuevo ya publicado): subir versionCode
-        base = record["versionCode"] if record else current
+        base = record.get("versionCode", current) if record else current
         new_code = max(current, base + 1) if record else current
         if record:
             gradle.write_text(

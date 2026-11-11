@@ -51,7 +51,7 @@ jobs:
           # Debe cubrir los commits propios del fork +1: la frontera shallow
           # tiene que caer en un commit conocido por keiyoushi para que el
           # fetch del script traiga solo el delta (como en el clone local).
-          fetch-depth: 30
+          fetch-depth: 150
 
       - name: Commits upstream sin integrar (check-upstream.sh)
         id: upstream

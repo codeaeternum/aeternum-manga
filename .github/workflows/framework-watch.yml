@@ -7,19 +7,24 @@ on:
     - cron: "0 8 1 * *"
 
 permissions:
+  contents: read
   issues: write
-
-env:
-  PIN: de743aed846da53e00c45ab26ee0e77f7bb4355b
 
 jobs:
   watch:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Checkout repo (aeternum-manga)
+        uses: actions/checkout@v4
+        with:
+          path: aeternum-manga
+
       - name: Diff framework files pin vs upstream main
         id: diff
         run: |
+          PIN=$(cat aeternum-manga/PIN)
+          echo "PIN=$PIN" >> "$GITHUB_OUTPUT"
           git init -q upstream && cd upstream
           git remote add origin https://github.com/keiyoushi/extensions-source
           git fetch -q --depth 1 origin "$PIN"
@@ -38,15 +43,16 @@ jobs:
         if: steps.diff.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PIN: ${{ steps.diff.outputs.PIN }}
         run: |
-          EXISTING=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"Framework upstream\"" --json number --jq '.[0].number' || true)
+          EXISTING=$(gh issue list -R "${{ github.repository }}" --state open --search "in:title \"Framework upstream\"" --json number --jq '.[0].number // empty' || true)
           BODY="El framework de keiyoushi (commit pin \`$PIN\`) diverge de \`main\` en archivos de build:
 
           \`\`\`
           $(cat framework-diff.txt | head -50)
           \`\`\`
 
-          Revisar si conviene actualizar el pin en \`.github/workflows/rebuild.yml\`."
+          Revisar si conviene actualizar el pin en \`PIN\`."
           if [ -n "$EXISTING" ]; then
             gh issue comment -R "${{ github.repository }}" "$EXISTING" --body "$BODY"
           else

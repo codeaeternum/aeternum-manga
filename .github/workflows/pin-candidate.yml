@@ -16,7 +16,7 @@ env:
 jobs:
   candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - name: Checkout repo (aeternum-manga)
         uses: actions/checkout@v4
@@ -48,6 +48,7 @@ jobs:
           [ -n "$SDKMANAGER" ] || SDKMANAGER="$ANDROID_HOME/tools/bin/sdkmanager"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" "platforms;android-37.0"
+          ln -sfn "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
 
       - name: Restore signing key
         run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > extensions-source/signingkey.jks
@@ -69,9 +70,16 @@ jobs:
           DIST="$HOME/.gradle/wrapper/dists/${NAME%.zip}/$HASH"
           mkdir -p "$DIST"
           VER=$(echo "$NAME" | sed -E 's/gradle-(.+)-(bin|all)\.zip/\1/')
-          curl -fL --retry 4 --retry-delay 5 -o "$DIST/$NAME" "$URL" \
+          if [ ! -f "$DIST/$NAME.ok" ] && { curl -fL --retry 4 --retry-delay 5 -o "$DIST/$NAME" "$URL" \
             || curl -fL --retry 4 --retry-delay 5 -o "$DIST/$NAME" \
-                 "https://github.com/gradle/gradle-distributions/releases/download/v$VER/$NAME"
+                 "https://github.com/gradle/gradle-distributions/releases/download/v$VER/$NAME"; }; then
+            unzip -q -o "$DIST/$NAME" -d "$DIST" \
+              && touch "$DIST/$NAME.ok" \
+              && rm -f "$DIST/$NAME" \
+              && echo "Distro pre-sembrada en $DIST"
+          else
+            echo "Pre-seed omitido (ya instalada o descarga imposible)"
+          fi
 
       - name: Build modules (uno a uno, un fallo no enmascara al resto)
         working-directory: extensions-source
@@ -144,7 +152,7 @@ jobs:
             echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           } > report.md
 
-          EXISTING=$(gh issue list -R "${{ github.repository }}" --state open --search 'in:title "Framework upstream"' --json number --jq '.[0].number' || true)
+          EXISTING=$(gh issue list -R "${{ github.repository }}" --state open --search 'in:title "Pin bump candidate"' --json number --jq '.[0].number // empty' || true)
           if [ -n "$EXISTING" ]; then
             gh issue comment -R "${{ github.repository }}" "$EXISTING" --body-file report.md
           else

@@ -53,4 +53,6 @@ cd "$SRC_DIR"
 ./gradlew "${TASKS[@]}" --console=plain
 
 cd "$HERE"
+# Mismo gate que CI: firma + refs android vs stubs de Tachimanga.
+python3 verify-jars.py
 python3 build-repo.py

@@ -46,6 +46,8 @@ else
     else
       check "Ikigai dominio activo ($ACTIVE)" "${ACTIVE%/}/series/" 200
     fi
+  else
+    FAILURES+=("Ikigai: landing sin chunk JS reconocible (cambió el markup)")
   fi
 fi
 
@@ -59,6 +61,9 @@ check "Rncalation API"    "https://rncalation.online/api/chapters/recent?offset=
 
 # HentaiMode
 check "HentaiMode"        "https://hentaimode.com/"                      200 'book-list'
+
+# MangaPlus (API oficial — responde binario proto; 200 basta)
+check "MangaPlus API"     "https://jumpg-webapi.tokyo-cdn.com/api/title_list/rankingV2?lang=esp&type=hottest&clang=esp" 200
 
 # NovelCool (API POST mínima)
 NC=$(curl -s --max-time 20 -A "$UA" -X POST "https://api.novelcool.com/elite/hot/" \
@@ -110,7 +115,7 @@ fi
 # Rncalation gate mv_ck: la extensión depende del flujo stub→cookie→retry.
 # 1ª request espera el stub mv-verifying + Set-Cookie; la 2ª con la cookie
 # debe devolver la página real — si el gate cambia, el interceptor se rompe.
-RN_HEADERS=$(mktemp); RN_STUB=$(curl -s -D "$RN_HEADERS" --max-time 20 -A "$UA" "https://rncalation.online/")
+RN_HEADERS=$(mktemp "${TMPDIR:-/tmp}/rn-headers.XXXXXX"); RN_STUB=$(curl -s -D "$RN_HEADERS" --max-time 20 -A "$UA" "https://rncalation.online/")
 RN_CK=$(grep -i "set-cookie" "$RN_HEADERS" | grep -oE 'mv_ck=[^;]+' | head -1)
 if [[ -z "$RN_CK" ]] || ! grep -q "mv-verifying" <<< "$RN_STUB"; then
   FAILURES+=("Rncalation gate: no llegó el stub mv_ck (¿gate desactivado o roto?)")

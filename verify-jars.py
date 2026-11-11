@@ -123,15 +123,33 @@ def find_build_dir(module: str) -> Path:
     """Igual que build-repo.py: buildDir redirigido o src/.../build."""
     flat = "_src_" + module.replace(".", "_")
     p = EXT_BUILD / flat
-    return p if p.exists() else SRC_ROOT / module.replace(".", "/")
+    return p if p.exists() else SRC_ROOT / module.replace(".", "/") / "build"
 
 
-def discover_jars() -> list[dict]:
+def expected_modules() -> set[str]:
+    """Los modulos canonicos: patches/modules/<lang>/<name> -> <lang>.<name>.
+
+    El verificador no debe pasar en silencio si un modulo no produce jar
+    (info-json ausente o glob fallado): la lista esperada viene del disco,
+    no solo de lo que el build decidio emitir.
+    """
+    return {
+        f"{lang.name}.{mod.name}"
+        for lang in (HERE / "patches" / "modules").iterdir()
+        if lang.is_dir()
+        for mod in lang.iterdir()
+        if mod.is_dir()
+    }
+
+
+def discover_jars() -> tuple[list[dict], set[str]]:
     """Un jar por modulo, emparejado por versionName (como build-repo.py).
 
     El dir de salida acumula builds viejos; el keiyoushi-source-info.json
-    marca cual es el que se publicaria.
+    marca cual es el que se publicaria. Devuelve (jars encontrados,
+    modulos esperados sin jar) — el caller falla si falta alguno.
     """
+    expected = expected_modules()
     info_files = {}
     for info_file in sorted(EXT_BUILD.glob(f"_*/{INFO_GLOB}")) + sorted(
         SRC_ROOT.glob(f"*/*/build/{INFO_GLOB}")
@@ -139,11 +157,15 @@ def discover_jars() -> list[dict]:
         mod = json.loads(info_file.read_text(encoding="utf-8"))["module"]
         info_files.setdefault(mod, info_file)
 
-    found = []
+    found, missing = [], set(expected)
     for info_file in info_files.values():
         info = json.loads(info_file.read_text(encoding="utf-8"))
         module = info["module"]
         if module in SKIP_MODULES:
+            continue
+        if module not in expected:
+            # Artefacto residual de un modulo ya retirado: no se publica.
+            print(f"-- {module}: sin patches/modules correspondiente, ignorado")
             continue
         ver = info["versionName"]
         jars = sorted(
@@ -151,12 +173,13 @@ def discover_jars() -> list[dict]:
         )
         if not jars:
             print(
-                f"!! {module}: falta jar v{ver} en {find_build_dir(module)}, omitido",
+                f"!! {module}: falta jar v{ver} en {find_build_dir(module)}",
                 file=sys.stderr,
             )
             continue
+        missing.discard(module)
         found.append({"module": module, "version": ver, "jar": jars[0]})
-    return found
+    return found, missing
 
 
 def check_signature(jar: Path) -> list[str]:
@@ -235,12 +258,17 @@ def main() -> int:
         )
         return 1
 
-    jars = discover_jars()
-    if not jars:
+    jars, missing = discover_jars()
+    if not jars and not missing:
         print("!! no se encontro ningun jar para verificar", file=sys.stderr)
         return 1
 
     failures = 0
+    for module in sorted(missing):
+        failures += 1
+        print(f"FAIL {module} (sin jar construido)")
+    if missing:
+        print()
     print(f"jdeps: {jdeps}")
     print(f"strict-prefs: {'ON' if args.strict_prefs else 'off'}\n")
 

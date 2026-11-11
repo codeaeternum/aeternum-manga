@@ -3,7 +3,8 @@
 Las extensiones de este repo son **scrapers propios** escritos para
 Tachimanga/iOS (runtime OpenJ9). Viven en `patches/modules/<lang>/<ext>/`
 y se copian sobre el árbol de `keiyoushi/extensions-source` al compilar —
-ese árbol es **solo toolchain** (congelado en commit `8c3323cc`), nunca
+ese árbol es **solo toolchain** (congelado en el commit que marca el
+archivo `PIN` de la raíz — fuente única de verdad del pin), nunca
 modifiques archivos fuera del módulo vendored.
 
 ## Reglas duras iOS/OpenJ9
@@ -92,7 +93,7 @@ CI (`rebuild.yml`) hace lo mismo semanal desde upstream pinned;
 2. Copia el `build.gradle.kts` de `es/leercapitulo` como plantilla
    (cambia name/lang/baseUrl/source{}/deeplink{}).
 3. Iconos: `res/mipmap-*/ic_launcher.png` (mipmap-xhdpi mínimo para `icon/`).
-4. Agrega `<lang>:<nombre>` a `MODULES` en `rebuild.sh` y al gradle
-   task list de `rebuild.yml`.
+4. Agrega `<lang>:<nombre>` a `MODULES` en `rebuild.sh`, `check-upstream.sh`,
+   `pin-candidate.yml` y al gradle task list de `rebuild.yml`.
 5. Agrega un check a `healthcheck.sh`.
 6. `./rebuild.sh` → revisa que aparezca en `index.min.json`.

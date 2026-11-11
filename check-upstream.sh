@@ -20,6 +20,13 @@ cd "$SRC_DIR"
 # en CI el clone tiene origin=fork y keiyoushi se añade como "upstream".
 UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-origin}"
 UPSTREAM_REF="${UPSTREAM_REF:-$UPSTREAM_REMOTE/main}"
+# Guardia de convención: con origin=el fork propio el diff es fork-vs-fork
+# y reportaría "al día" en falso. Si el remote no es keiyoushi, avisar.
+REMOTE_URL=$(git remote get-url "$UPSTREAM_REMOTE" 2>/dev/null || echo "")
+if [[ "$REMOTE_URL" != *keiyoushi* ]]; then
+    echo "AVISO: $UPSTREAM_REMOTE apunta a '$REMOTE_URL' (no keiyoushi) —" >&2
+    echo "       el diff puede ser fork-vs-fork. Usa UPSTREAM_REMOTE=<remote keiyoushi>." >&2
+fi
 echo "==> git fetch $UPSTREAM_REMOTE main"
 git fetch -q "$UPSTREAM_REMOTE" main || { echo "ERROR: fetch falló (¿sin red?)" >&2; exit 1; }
 
@@ -56,7 +63,7 @@ for rel in "${MODULES[@]}"; do
     dir="src/${rel/://}"
     # Commits upstream que tocan el módulo, menos graft-boundary y skips
     lines=$(git log --abbrev=8 --oneline HEAD.."$UPSTREAM_REF" -- "$dir" \
-        | { grep -vF -f <(printf '%s\n' $BOUNDARY) || true; } \
+        | { [[ -n "$BOUNDARY" ]] && grep -vF -f <(printf '%s\n' $BOUNDARY) || cat; } \
         | { [[ -n "$SKIP" ]] && grep -vF -f <(printf '%s\n' $SKIP) || cat; })
     count=0
     [[ -n "$lines" ]] && count=$(wc -l <<< "$lines" | tr -d ' ')

@@ -40,6 +40,9 @@ SKIP_MODULES = {
 
 # ---------- protobuf encoder (index.proto de keiyoushi/mihon) ----------
 def _varint(n: int) -> bytes:
+    # int64 en protobuf es complemento a 2: un id negativo sin enmascarar
+    # haria `n >>= 7` bucle infinito (nunca llega a 0).
+    n &= (1 << 64) - 1
     out = bytearray()
     while True:
         b = n & 0x7F
@@ -114,8 +117,19 @@ def find_build_dir(module: str) -> Path:
     """buildDir redirigido: ~/.aeternum-ext-build/_src_<lang>_<name>"""
     flat = "_src_" + module.replace(".", "_")
     p = EXT_BUILD / flat
-    return p if p.exists() else SRC_ROOT / module.replace(".", "/")
+    return p if p.exists() else SRC_ROOT / module.replace(".", "/") / "build"
 
+
+# Los modulos canonicos definen lo que el indice DEBE contener: si alguno
+# no produce artefactos, publicar el indice con una extension menos es un
+# error — se aborta en vez de servir un repo incompleto.
+expected = {
+    f"{lang.name}.{mod.name}"
+    for lang in (HERE / "patches" / "modules").iterdir()
+    if lang.is_dir()
+    for mod in lang.iterdir()
+    if mod.is_dir()
+}
 
 entries = []      # index.min.json (legado)
 built = []        # (info, apk_name, jar_name, has_icon) para index.pb
@@ -127,9 +141,14 @@ for info_file in sorted(EXT_BUILD.glob(f"_*/{INFO_GLOB}")) + sorted(
     mod = json.loads(info_file.read_text(encoding="utf-8"))["module"]
     info_files.setdefault(mod, info_file)
 
+missing = set(expected)
 for info_file in info_files.values():
     info = json.loads(info_file.read_text(encoding="utf-8"))
     if info["module"] in SKIP_MODULES:
+        continue
+    if info["module"] not in expected:
+        # Artefacto residual de un modulo ya retirado: no se publica.
+        print(f"-- {info['module']}: sin patches/modules correspondiente, ignorado")
         continue
 
     build_dir = find_build_dir(info["module"])
@@ -140,10 +159,11 @@ for info_file in info_files.values():
     jars = list(build_dir.glob(f"outputs/jar/release/*-v{ver}.jar"))
     if not apks or not jars:
         print(
-            f"!! {info['packageName']}: falta apk o jar v{ver} en {build_dir}, omitido",
+            f"!! {info['packageName']}: falta apk o jar v{ver} en {build_dir}",
             file=sys.stderr,
         )
         continue
+    missing.discard(info["module"])
     apk, jar = apks[0], jars[0]
 
     ext_dir = SRC_ROOT / info["module"].replace(".", "/")
@@ -188,6 +208,13 @@ for info_file in info_files.values():
     print(f"ok {info['name']} v{info['versionName']} ({apk.name} + {jar.name})")
 
 
+if missing:
+    print(
+        "\n!! modulos sin artefactos: " + ", ".join(sorted(missing)),
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
 entries.sort(key=lambda e: e["pkg"])
 built.sort(key=lambda b: b[0]["packageName"])
 
@@ -209,10 +236,13 @@ if changes:
     changelog = HERE / "CHANGELOG.md"
     today = datetime.date.today().isoformat()
     old = changelog.read_text(encoding="utf-8") if changelog.exists() else "# Changelog\n\n"
+    if not old.startswith("# Changelog\n\n"):
+        old = "# Changelog\n\n" + old.lstrip("# \n")
     body = old[len("# Changelog\n\n"):]
     if body.startswith(f"## {today}\n"):
         # mismo dia: fusionar entries bajo la seccion existente
-        first_end = body.index("\n\n") + 2
+        sep = body.find("\n\n")
+        first_end = (sep + 2) if sep != -1 else len(body)
         body = body[:first_end] + "\n".join(changes) + "\n" + body[first_end:]
         changelog.write_text("# Changelog\n\n" + body, encoding="utf-8")
     else:
