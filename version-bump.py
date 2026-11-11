@@ -31,8 +31,13 @@ INCLUDE_SUFFIXES = {
 def module_hash(module_dir: Path) -> str:
     h = hashlib.sha256()
     for f in sorted(module_dir.rglob("*")):
+        # Dotdirs (.gradle/, .idea/) son cache de build local: existen en
+        # disco pero no en el checkout limpio de CI -> hash inestable.
+        rel = f.relative_to(module_dir)
+        if any(part.startswith(".") for part in rel.parts):
+            continue
         if f.is_file() and f.suffix in INCLUDE_SUFFIXES:
-            h.update(f.relative_to(module_dir).as_posix().encode())
+            h.update(rel.as_posix().encode())
             data = f.read_bytes()
             # Un checkout con autocrlf (Windows) re-escribe los archivos de
             # texto: normalizar EOL para que el hash sea portable.
