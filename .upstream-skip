@@ -11,3 +11,7 @@ a5e7043735  # Ikigai #20480: elimina su mecanismo SharedPreferences de dominio �
 5240ce7bec  # Core browser headers — INTEGRADO via pin bump a de743aed84; nuestros módulos obtienen BrowserHeaders del framework nuevo
 3aeaa88e    # Core fetchableBaseUrl — INTEGRADO via pin bump; nuestra rotación de dominio (ikigai) sigue siendo propia en memoria
 fc7a827769  # Migración masiva a Fetch API — PORTADA a mano a los 9 módulos vendored (DOCUMENT/XHR/IMAGE/NONE por call site, verificado contra upstream main)
+92906c03 Core SMangaUpdate callback — cambio de forma del framework, se absorbe con el próximo pin bump (pin-candidate lo valida)
+094f1e0d MangaPlus magazine label + releaseSchedule status — portado a patches/modules/all/mangaplus/Dto.kt
+4514dc54 Webtoons browse/sort filters — portado (Filters.kt + browseManga)
+ae7f4819 Webtoons split filters — portado junto al anterior
