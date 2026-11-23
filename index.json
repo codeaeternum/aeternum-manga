@@ -11,13 +11,13 @@
         "name": "MANGA Plus by SHUEISHA",
         "package_name": "eu.kanade.tachiyomi.extension.all.mangaplus",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.mangaplus-v1.6.3.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.mangaplus-v1.6.4.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.all.mangaplus.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.mangaplus-v1.6.3.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.mangaplus-v1.6.4.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106003",
-        "version_name": "1.6.3",
+        "version_code": "106004",
+        "version_name": "1.6.4",
         "content_warning": 1,
         "sources": [
           {
@@ -137,13 +137,13 @@
         "name": "Webtoons.com",
         "package_name": "eu.kanade.tachiyomi.extension.all.webtoons",
         "resources": {
-          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.webtoons-v1.6.16.apk",
+          "apk_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/apk/tachiyomi-all.webtoons-v1.6.17.apk",
           "icon_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/icon/eu.kanade.tachiyomi.extension.all.webtoons.png",
-          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.webtoons-v1.6.16.jar"
+          "jar_url": "https://raw.githubusercontent.com/codeaeternum/aeternum-manga/main/jar/tachiyomi-all.webtoons-v1.6.17.jar"
         },
         "extension_lib": "1.6",
-        "version_code": "106016",
-        "version_name": "1.6.16",
+        "version_code": "106017",
+        "version_name": "1.6.17",
         "content_warning": 1,
         "sources": [
           {

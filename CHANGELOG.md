@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23
+
+- MANGA Plus by SHUEISHA 1.6.3 -> 1.6.4
+- Webtoons.com 1.6.16 -> 1.6.17
+
 ## 2026-11-11
 
 - MANGA Plus by SHUEISHA 1.6.2 -> 1.6.3
